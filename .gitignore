@@ -1,0 +1,42 @@
+# Godot 4+ specific ignores
+.godot/
+.nomedia
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+export_credentials.cfg
+*.tmp
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono / C# specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# Godot 4.2+ specific
+~*.dll
+
+# System / OS specific
+.DS_Store
+Thumbs.db
+*~
+.directory
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build / Export folders (optional but recommended)
+android/
+iOS/
+web/
+
+# Temporary files
+*.log
+*.bak
