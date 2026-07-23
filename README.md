@@ -65,19 +65,75 @@ The project is designed around long-term maintainability, modular systems and da
 
 ```
 
-godot-tower-defense/
-│
-├── .github/
-├── .ai/
-├── docs/
-├── engine/
-├── game/
-├── assets/
-├── tests/
-├── tools/
-├── examples/
-└── README.md
+# ساختار پوشه پروژه Godot Tower Defense
 
+```bash
+godot-tower-defense/
+├── project.godot
+├── icon.svg
+├── .gitignore
+├── .gitattributes
+├── LICENSE
+├── README.md
+│
+├── assets/                  # فایل‌های خام (Raw Assets)
+│   ├── sprites/
+│   │   ├── towers/
+│   │   ├── enemies/
+│   │   ├── projectiles/
+│   │   ├── environment/
+│   │   └── ui/
+│   ├── tilesets/
+│   ├── audio/
+│   │   ├── sfx/
+│   │   └── music/
+│   ├── vfx/
+│   └── fonts/
+│
+├── src/                     # تمام منطق و صحنه‌های Godot
+│   ├── autoload/            # Global Singletons (Managers)
+│   │   ├── GameManager.gd
+│   │   ├── AudioManager.gd
+│   │   ├── SaveManager.gd
+│   │   └── EventBus.gd
+│   ├── components/          # کامپوننت‌های reusable
+│   │   ├── health/
+│   │   ├── attack/
+│   │   ├── movement/
+│   │   └── selection/
+│   ├── entities/
+│   │   ├── towers/
+│   │   ├── enemies/
+│   │   ├── projectiles/
+│   │   └── base/
+│   ├── systems/             # سیستم‌های اصلی بازی
+│   │   ├── wave/
+│   │   ├── economy/
+│   │   ├── building/
+│   │   ├── pathfinding/
+│   │   └── pooling/
+│   ├── ui/
+│   │   ├── screens/
+│   │   ├── hud/
+│   │   └── components/
+│   ├── levels/
+│   ├── resources/           # Data Resources (TowerData, EnemyData, ...)
+│   │   ├── towers/
+│   │   ├── enemies/
+│   │   ├── waves/
+│   │   └── upgrades/
+│   └── utils/
+│
+├── docs/                    # مستندات پروژه
+│   ├── 01-vision.md
+│   ├── 02-architecture.md
+│   ├── 03-game-design.md
+│   ├── 04-roadmap.md
+│   └── specifications/
+│
+├── addons/                  # افزونه‌های Godot
+├── tools/                   # ابزارهای کمکی (اختیاری)
+└── exports/                 # خروجی‌های تست (در .gitignore قرار می‌گیرد)
 ```
 
 ---
