@@ -28,9 +28,9 @@ jobs:
         run: |
           mkdir -p ~/godot-bin
           curl -sL -o /tmp/godot.zip \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_${GODOT_VERSION}_linux.x86_64.zip"
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
           unzip -o -q /tmp/godot.zip -d /tmp/godot-extract
-          mv /tmp/godot-extract/Godot_${GODOT_VERSION}_linux.x86_64 ~/godot-bin/godot
+          mv /tmp/godot-extract/Godot_v${GODOT_VERSION}_linux.x86_64 ~/godot-bin/godot
           chmod +x ~/godot-bin/godot
 
       - name: Import project
@@ -70,9 +70,9 @@ jobs:
         run: |
           mkdir -p ~/godot-bin
           curl -sL -o /tmp/godot.zip \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_${GODOT_VERSION}_linux.x86_64.zip"
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
           unzip -o -q /tmp/godot.zip -d /tmp/godot-extract
-          mv /tmp/godot-extract/Godot_${GODOT_VERSION}_linux.x86_64 ~/godot-bin/godot
+          mv /tmp/godot-extract/Godot_v${GODOT_VERSION}_linux.x86_64 ~/godot-bin/godot
           chmod +x ~/godot-bin/godot
 
       - name: Cache export templates (android only, ~90MB extracted)
