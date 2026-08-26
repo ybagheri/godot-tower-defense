@@ -2,6 +2,49 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [0.3.0] - 2026-08-26
+
+### Added — Milestone 3: Gameplay Foundation (Phase 2, in progress)
+
+- Definitions, all validated (SPEC-0001): `EnemyDefinition` (stats,
+  resistances, rewards, flying/boss flags), `TowerDefinition` (damage,
+  speed, range, crit, projectile options, cost, priority),
+  `SpawnGroupDefinition` + `WaveDefinition` (SPEC-0005),
+  `StageDefinition` (waves, route catalog, prep time, battle start),
+  `PathDefinition` waypoints/routes (SPEC-0009).
+- Components: `HealthComponent` (death announced once), `StatsComponent`
+  runtime stat copies, `LootComponent`, `MovementComponent` waypoint
+  follower with speed multiplier and remaining-distance queries,
+  `TargetingComponent` (FIRST/CLOSEST/STRONGEST/LOWEST_HEALTH priorities,
+  range filter, flying filter), `AttackComponent` (cooldown loop, instant
+  or pooled-projectile delivery).
+- Systems: `CombatSystem` deterministic damage math + event publication
+  (SPEC-0006), pooled chasing `Projectile`, `EnemyRegistry` event-driven
+  target tracking, `EnemyEventRelay` translating engine death/arrival into
+  game-level enemy events (A5), `WaveSystem` state machine
+  (IDLE/PREPARING/SPAWNING/ACTIVE/COMPLETED/FAILED) with merged spawn
+  timelines, boss flags, synchronous zero-prep starts for determinism,
+  `EconomySystem` wallet (SPEC-0010) and `RewardSystem` kill/wave payouts.
+- Factories: `EnemyFactory`, `TowerFactory` assembling configured entities
+  from definitions with runtime naming and spawn/built events
+  (SPEC-0007/0008).
+- Tests: 9 new suites / 50 new tests including a full deterministic
+  mini-battle integration (spawn -> path -> kill -> gold -> wave clear ->
+  castle arrival -> stage complete/fail). Project total: 91 tests passing.
+- `docs/10_Game_Design/ASSUMPTIONS.md` logging inferred design decisions.
+
+### Fixed
+
+- Movement advance no longer requires activation (deterministic testing);
+  processing still gated by entity lifecycle.
+- Targeting validity based on liveness instead of entity state machine.
+- StageDefinition.get_path renamed get_route (collided with Resource API).
+
+### Validated
+
+- import clean; validate_scripts: 29 scripts OK;
+  test_runner: ALL SUITES PASSED (exit 0).
+
 ## [0.2.0] - 2026-08-26
 
 ### Added — Milestone 2: Core Framework (Phase 1, in progress)

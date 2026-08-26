@@ -30,7 +30,10 @@ func _scan(directory_path: String, failures: PackedStringArray) -> int:
 		if entry.ends_with(".gd"):
 			count += 1
 			var path := directory_path + "/" + entry
-			if ResourceLoader.load(path, "GDScript") == null:
+			var script: GDScript = ResourceLoader.load(path, "GDScript")
+			# A failing script still returns a GDScript object here; only
+			# instantiation capability proves full compilation.
+			if script == null or not script.can_instantiate():
 				failures.append("%s: failed to compile" % path)
 	for subdirectory: String in directory.get_directories():
 		count += _scan(directory_path + "/" + subdirectory, failures)

@@ -125,7 +125,7 @@ Project Rules
 Status:
 
 ```
-IN PROGRESS
+COMPLETE
 ```
 
 ## Goal
@@ -203,7 +203,7 @@ systems/
 Status:
 
 ```
-PLANNED
+IN PROGRESS
 ```
 
 ## Goal

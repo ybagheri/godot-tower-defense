@@ -11,9 +11,11 @@ extends Object
 
 const ENTITY_SPAWNED: StringName = &"entity_spawned"
 const ENTITY_DIED: StringName = &"entity_died"
+const ENTITY_REACHED_DESTINATION: StringName = &"entity_reached_destination"
 
 const ENEMY_SPAWNED: StringName = &"enemy_spawned"
 const ENEMY_DIED: StringName = &"enemy_died"
+const ENEMY_REACHED_GOAL: StringName = &"enemy_reached_goal"
 
 const TOWER_BUILT: StringName = &"tower_built"
 const TOWER_UPGRADED: StringName = &"tower_upgraded"
