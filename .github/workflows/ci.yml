@@ -127,28 +127,49 @@ jobs:
         run: |
           ~/godot-bin/godot --headless --path . --import
           set +e
-          # Flag order matters: --export-debug must precede --path.
           ~/godot-bin/godot --headless --export-debug --path . \
-            --verbose "Android Debug" exports/godottd-debug.apk \
+            "Android Debug" exports/godottd-debug.apk \
             > export_log.txt 2>&1
           EXIT_CODE=$?
           {
             echo "### Export exit: $EXIT_CODE"
             echo '```'
-            tail -50 export_log.txt
+            tail -60 export_log.txt
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-          ls -la exports/ >> "$GITHUB_STEP_SUMMARY" || true
-          test -f exports/godottd-debug.apk && exit $EXIT_CODE
-          exit 1
 
-      - name: Upload export log on failure
-        if: failure()
+      - name: Upload diagnostics on any result
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: export-log
-          path: export_log.txt
+          name: android-export-diagnostics
+          path: |
+            export_log.txt
+            exports/**
           if-no-files-found: ignore
+
+      - name: Diagnostics bundle
+        if: always()
+        run: |
+          {
+            echo "== godot version =="; ~/godot-bin/godot --version
+            echo "== which java =="; which java || true
+            echo "== ANDROID_HOME =="; echo "$ANDROID_HOME"; ls "$ANDROID_HOME" 2>/dev/null
+            echo "== build-tools =="; ls "$ANDROID_HOME/build-tools" 2>/dev/null
+            echo "== editor settings =="; cat ~/.config/godot/editor_settings-${GODOT_VERSION}.tres 2>/dev/null
+            echo "== templates =="; ls -la ~/.local/share/godot/export_templates/${GODOT_VERSION}/ 2>/dev/null
+            echo "== keystore =="; ls -la ~/.android/ 2>/dev/null
+            echo "== export log =="; cat export_log.txt 2>/dev/null
+          } > diagnostics.txt
+          cat diagnostics.txt >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload APK artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godottd-debug-apk
+          path: exports/godottd-debug.apk
+          if-no-files-found: error
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
