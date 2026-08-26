@@ -16,6 +16,13 @@ UI_DEFEAT,DEFEAT
 UI_BOSS_WARNING,A boss approaches!
 ENEMY_GOBLIN,Goblin
 ENEMY_WISP,Wisp
+ENEMY_KNIGHT,Fallen Knight
 ENEMY_OGRE,Ogre Warlord
 TOWER_ARCHER,Archer Tower
+TOWER_MAGE,Arcane Spire
+TOWER_CANNON,Bombard
+ABILITY_METEOR,Meteor Strike
+ABILITY_FROST,Winter's Grasp
+UI_READY,Ready
+UI_STARS_FORMAT,Stars earned: {0}
 STAGE_TEST_RANGE,The Test Range

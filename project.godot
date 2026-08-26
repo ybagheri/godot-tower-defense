@@ -22,6 +22,8 @@ buses/default_bus_layout="res://default_bus_layout.tres"
 EventBus="*res://scripts/managers/event_bus.gd"
 ResourceManager="*res://scripts/managers/resource_manager.gd"
 PoolManager="*res://scripts/managers/pool_manager.gd"
+AudioManager="*res://scripts/managers/audio_manager.gd"
+SaveManager="*res://scripts/managers/save_manager.gd"
 EventProbe="*res://scripts/debug/event_probe.gd"
 [display]
 

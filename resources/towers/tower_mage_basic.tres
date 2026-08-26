@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="TowerDefinition" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/tower_definition.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://scenes/shared/tower_mage_visual.tscn" id="2_vis"]
+[ext_resource type="Script" path="res://scripts/resources/tower_upgrade_definition.gd" id="3_up"]
+
+[sub_resource type="Resource" id="upgrade_1"]
+script = ExtResource("3_up")
+cost = 160
+attack_damage_bonus = 20
+attack_range_bonus = 40.0
+
+[sub_resource type="Resource" id="upgrade_2"]
+script = ExtResource("3_up")
+cost = 240
+attack_damage_bonus = 26
+attack_speed_bonus = 0.2
+attack_range_bonus = 20.0
+
+[resource]
+script = ExtResource("1_def")
+id = "tower.mage.basic"
+display_key = "TOWER_MAGE"
+display_name = "Arcane Spire"
+attack_damage = 34
+attack_speed = 0.8
+attack_range = 300.0
+damage_type = 1
+critical_chance = 0.0
+uses_projectiles = false
+cost = 170
+targeting_priority = 1
+can_target_flying = true
+visual_scene = ExtResource("2_vis")
+upgrades = [SubResource("upgrade_1"), SubResource("upgrade_2")]

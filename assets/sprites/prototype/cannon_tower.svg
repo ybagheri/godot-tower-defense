@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 64" width="72" height="64">
+  <!-- PROTOTYPE placeholder: cannon tower -->
+  <rect x="18" y="36" width="36" height="22" fill="#4f4f57"/>
+  <rect x="14" y="54" width="44" height="8" fill="#3d3d44"/>
+  <rect x="26" y="24" width="20" height="14" rx="3" fill="#606069"/>
+  <rect x="42" y="26" width="22" height="9" rx="4" fill="#2e2e34"/>
+  <circle cx="66" cy="30" r="4" fill="#1d1d22"/>
+</svg>

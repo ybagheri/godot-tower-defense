@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 80" width="64" height="80">
+  <!-- PROTOTYPE placeholder: mage tower -->
+  <rect x="20" y="46" width="24" height="28" fill="#4c445e"/>
+  <rect x="16" y="72" width="32" height="6" fill="#3a3448"/>
+  <circle cx="32" cy="30" r="14" fill="#5d5480"/>
+  <circle cx="32" cy="26" r="6" fill="#a86ee0"/>
+  <path d="M32 12 L32 2 M24 16 L18 10 M40 16 L46 10" stroke="#7b6bb5" stroke-width="3"/>
+</svg>

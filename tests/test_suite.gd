@@ -36,6 +36,14 @@ func pool_manager() -> Node:
 	return _root().get_node("PoolManager")
 
 
+func save_manager() -> Node:
+	return _root().get_node("SaveManager")
+
+
+func autoload(node_name: String) -> Node:
+	return _root().get_node_or_null(node_name)
+
+
 ## Adds [param node] to the tree for the duration of a test and returns it.
 func stage(node: Node) -> Node:
 	_root().add_child(node)

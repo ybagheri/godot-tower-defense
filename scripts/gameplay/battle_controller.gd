@@ -15,6 +15,9 @@ signal battle_ended(victory: bool)
 @export var tower_catalog: Array[TowerDefinition]
 ## Enemies used by this stage; registered so wave groups resolve by id.
 @export var enemy_catalog: Array[EnemyDefinition]
+@export var ability_catalog: Array[AbilityDefinition]
+@export var audio_catalog: Array[AudioDefinition]
+@export var battle_music_id: String = "music.battle"
 @export var balance: BalanceDefinition
 
 ## Scene wiring (resolved in _ready; NodePaths avoid cross-instance
@@ -22,15 +25,18 @@ signal battle_ended(victory: bool)
 @export var entities_path: NodePath
 @export var castle_path: NodePath
 @export var ring_path: NodePath
+@export var vfx_path: NodePath
 
 var wallet := EconomySystem.new()
 var registry := EnemyRegistry.new()
 var building := BuildingSystem.new()
 var waves := WaveSystem.new()
+var abilities := AbilitySystem.new()
 
 var entities_container: Node2D = null
 var castle_entity: GameEntity = null
 var selection_ring: SelectionRing = null
+var vfx_layer: BattleVfx = null
 
 var _rewards: RewardSystem = null
 var _castle_system: CastleSystem = null
@@ -50,23 +56,33 @@ func _ready() -> void:
 	entities_container = get_node_or_null(entities_path) as Node2D
 	castle_entity = get_node_or_null(castle_path) as GameEntity
 	selection_ring = get_node_or_null(ring_path) as SelectionRing
-
-	var hud := get_node_or_null("HUD") as HudController
-	if hud != null:
-		hud.bind_controller(self)
-	var tap_layer := get_node_or_null("WorldTapLayer") as WorldTapLayer
-	if tap_layer != null:
-		tap_layer.controller = self
+	vfx_layer = get_node_or_null(vfx_path) as BattleVfx
 
 	_register_catalogs()
+	_setup_audio()
 	wallet.configure(stage.starting_gold if stage != null else 0)
 
 	add_child(registry)
 	var relay := EnemyEventRelay.new()
 	add_child(relay)
+
+	var lifecycle := EnemyLifecycleSystem.new()
+	if vfx_layer != null:
+		lifecycle.vfx_hook = vfx_layer.play_burst
+	add_child(lifecycle)
+
 	_rewards = RewardSystem.new()
 	_rewards.setup(wallet)
 	add_child(_rewards)
+
+	var save_manager := get_node_or_null("/root/SaveManager")
+	if save_manager != null:
+		var progression := ProgressionTracker.new()
+		progression.setup(save_manager)
+		progression.castle_ratio_provider = func() -> float:
+			return float(castle_current_health()) / float(maxi(castle_max_health(), 1))
+		add_child(progression)
+
 	_castle_system = CastleSystem.new()
 	_castle_system.setup(castle_entity)
 	add_child(_castle_system)
@@ -82,8 +98,22 @@ func _ready() -> void:
 	waves.spawn_parent = entities_container
 	add_child(waves)
 
+	abilities.setup(ability_catalog, wallet, registry)
+	if vfx_layer != null:
+		abilities.vfx_hook = _on_ability_vfx
+	add_child(abilities)
+
 	if selection_ring != null:
 		selection_changed.connect(selection_ring.follow)
+
+	# Bind UI/input LAST so every system is fully wired when the HUD builds
+	# bars from live catalogs.
+	var hud := get_node_or_null("HUD") as HudController
+	if hud != null:
+		hud.bind_controller(self)
+	var tap_layer := get_node_or_null("WorldTapLayer") as WorldTapLayer
+	if tap_layer != null:
+		tap_layer.controller = self
 
 	EventBus.subscribe(GameEvents.STAGE_COMPLETED, _on_stage_completed)
 	EventBus.subscribe(GameEvents.CASTLE_DESTROYED, _on_castle_destroyed)
@@ -105,6 +135,7 @@ func arm_building(definition: TowerDefinition) -> void:
 	if _battle_over or definition == null:
 		return
 	_armed_definition = definition
+	abilities.cancel_arm()
 	clear_selection()
 	build_mode_changed.emit(true)
 
@@ -118,12 +149,37 @@ func armed_definition() -> TowerDefinition:
 	return _armed_definition
 
 
+## Arms an ability for the next world tap; cancels build mode first.
+func arm_ability(definition: AbilityDefinition) -> void:
+	if _battle_over or definition == null or abilities.is_on_cooldown(definition):
+		return
+	cancel_building()
+	abilities.arm(definition)
+	build_mode_changed.emit(false)
+
+
+func try_cast_ability_at(world_position: Vector2) -> bool:
+	return abilities.try_cast_at(world_position)
+
+
+func ability_system() -> AbilitySystem:
+	return abilities
+
+
 func castle_current_health() -> int:
 	return _castle_system.current_health() if _castle_system != null else 0
 
 
 func castle_max_health() -> int:
 	return _castle_system.max_health() if _castle_system != null else 0
+
+
+## Best recorded star rating for a stage from persistent progression.
+func saved_stage_stars(stage_id: String) -> int:
+	var save := get_node_or_null("/root/SaveManager")
+	if save == null:
+		return 0
+	return int(save.get_section("progression").get("stages", {}).get(stage_id, 0))
 
 
 func cancel_building() -> void:
@@ -133,7 +189,7 @@ func cancel_building() -> void:
 	build_mode_changed.emit(false)
 
 
-## Tap on the world while armed: attempt placement at that position.
+## Places the armed tower after BuildingSystem validation.
 func try_build_at(world_position: Vector2) -> void:
 	if not is_build_armed():
 		return
@@ -147,14 +203,11 @@ func select_tower(tower: GameEntity) -> void:
 	selection_changed.emit(tower)
 
 
-func clear_selection() -> void:
-	if _selected_tower != null:
-		_selected_tower = null
-	selection_changed.emit(null)
-
-
-## Nearest built tower within pick radius of [param world_position].
+## Tap routing: ability cast > tower placement > tower selection.
 func handle_world_tap(world_position: Vector2) -> void:
+	if abilities.armed_ability() != null:
+		try_cast_ability_at(world_position)
+		return
 	if is_build_armed():
 		try_build_at(world_position)
 		return
@@ -163,6 +216,12 @@ func handle_world_tap(world_position: Vector2) -> void:
 		select_tower(picked)
 	else:
 		clear_selection()
+
+
+func clear_selection() -> void:
+	if _selected_tower != null:
+		_selected_tower = null
+	selection_changed.emit(null)
 
 
 func upgrade_selected() -> bool:
@@ -212,10 +271,33 @@ func _register_catalogs() -> void:
 	for definition in tower_catalog:
 		if not ResourceManager.has(definition.id):
 			ResourceManager.register(definition)
+	for definition in ability_catalog:
+		if not ResourceManager.has(definition.id):
+			ResourceManager.register(definition)
 	if balance != null and not ResourceManager.has(balance.id):
 		ResourceManager.register(balance)
 	if stage != null and not ResourceManager.has(stage.id):
 		ResourceManager.register(stage)
+
+
+## Wires the global audio service with this battle's catalog and starts music.
+func _setup_audio() -> void:
+	var audio := get_node_or_null("/root/AudioManager")
+	if audio == null:
+		return
+	audio.setup(audio_catalog)
+	if battle_music_id != "":
+		audio.play_music(battle_music_id)
+
+
+func _on_ability_vfx(effect: String, position: Vector2, radius: float) -> void:
+	if vfx_layer == null:
+		return
+	match effect:
+		"explosion":
+			vfx_layer.play_explosion(position, radius)
+		"frost":
+			vfx_layer.play_frost(position, radius)
 
 
 func _pick_tower(world_position: Vector2) -> GameEntity:

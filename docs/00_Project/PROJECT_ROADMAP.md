@@ -256,7 +256,7 @@ Player can:
 Status:
 
 ```
-PLANNED
+IN PROGRESS
 ```
 
 ## Goal

@@ -72,6 +72,10 @@ mouse_filter = 2
 
 [node name="VBox" type="VBoxContainer" parent="Root/BottomBar"]
 
+[node name="AbilityBar" type="HBoxContainer" parent="Root/BottomBar/VBox"]
+unique_name_in_owner = true
+alignment = 1
+
 [node name="BuildBar" type="HBoxContainer" parent="Root/BottomBar/VBox"]
 unique_name_in_owner = true
 alignment = 1

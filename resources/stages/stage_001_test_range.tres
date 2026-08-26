@@ -63,13 +63,21 @@ spawn_interval = 0.7
 initial_delay = 4.0
 path_id = "stage001.main"
 
+[sub_resource type="Resource" id="group_w3_knights"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 2
+spawn_interval = 2.5
+initial_delay = 9.0
+path_id = "stage001.main"
+
 [sub_resource type="Resource" id="wave_3"]
 script = ExtResource("3_wave")
 id = "stage001.wave_3"
 display_name = "Wisps on the Wind"
 version = 1
 wave_number = 3
-spawn_groups = [SubResource("group_w3_goblins"), SubResource("group_w3_wisps")]
+spawn_groups = [SubResource("group_w3_goblins"), SubResource("group_w3_wisps"), SubResource("group_w3_knights")]
 reward_gold = 60
 
 [sub_resource type="Resource" id="group_w4_goblins"]
@@ -88,13 +96,21 @@ spawn_interval = 0.6
 initial_delay = 5.0
 path_id = "stage001.main"
 
+[sub_resource type="Resource" id="group_w4_knights"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 4
+spawn_interval = 2.2
+initial_delay = 8.0
+path_id = "stage001.main"
+
 [sub_resource type="Resource" id="wave_4"]
 script = ExtResource("3_wave")
 id = "stage001.wave_4"
 display_name = "The Long Assault"
 version = 1
 wave_number = 4
-spawn_groups = [SubResource("group_w4_goblins"), SubResource("group_w4_wisps")]
+spawn_groups = [SubResource("group_w4_goblins"), SubResource("group_w4_wisps"), SubResource("group_w4_knights")]
 reward_gold = 70
 
 [sub_resource type="Resource" id="group_w5_ogre"]
@@ -113,13 +129,21 @@ spawn_interval = 1.4
 initial_delay = 0.0
 path_id = "stage001.main"
 
+[sub_resource type="Resource" id="group_w5_knights"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 2
+spawn_interval = 2.0
+initial_delay = 10.0
+path_id = "stage001.main"
+
 [sub_resource type="Resource" id="wave_5"]
 script = ExtResource("3_wave")
 id = "stage001.wave_5"
 display_name = "Ogre Warlord"
 version = 1
 wave_number = 5
-spawn_groups = [SubResource("group_w5_goblins"), SubResource("group_w5_ogre")]
+spawn_groups = [SubResource("group_w5_goblins"), SubResource("group_w5_knights"), SubResource("group_w5_ogre")]
 is_boss_wave = true
 reward_gold = 120
 

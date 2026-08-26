@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/enemy_definition.gd" id="1_def"]
+[ext_resource type="PackedScene" path="res://scenes/shared/enemy_knight_visual.tscn" id="2_vis"]
+
+[resource]
+script = ExtResource("1_def")
+id = "enemy.knight.elite"
+display_key = "ENEMY_KNIGHT"
+display_name = "Fallen Knight"
+max_health = 110
+speed = 70.0
+armor = 8
+magic_resistance = 0.15
+reward_gold = 16
+damage_to_castle = 4
+visual_scene = ExtResource("2_vis")

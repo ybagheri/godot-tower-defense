@@ -126,11 +126,10 @@ func _register_child_components() -> void:
 		if child is GameComponent:
 			var component := child as GameComponent
 			var key: Script = component.get_script()
-			if key != null and _components.has(key):
-				push_error("GameEntity '%s': duplicate component %s in scene" % [entity_id, key.get_global_name()])
-				continue
 			if key == null:
 				push_error("GameEntity '%s': child component without script" % entity_id)
+				continue
+			if _components.has(key):
 				continue
 			component._bind(self)
 			_components[key] = component

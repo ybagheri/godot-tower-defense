@@ -12,6 +12,7 @@ extends CanvasLayer
 @onready var speed_button: Button = %SpeedButton
 @onready var pause_button: Button = %PauseButton
 @onready var build_bar: HBoxContainer = %BuildBar
+@onready var ability_bar: HBoxContainer = %AbilityBar
 @onready var selection_panel: PanelContainer = %SelectionPanel
 @onready var selection_title: Label = %SelectionTitle
 @onready var selection_stats: Label = %SelectionStats
@@ -25,6 +26,7 @@ extends CanvasLayer
 @export var controller: BattleController
 
 var _build_buttons: Dictionary = {}
+var _ability_buttons: Dictionary = {}
 var _toast_until_ms: int = 0
 
 
@@ -57,6 +59,7 @@ func bind_controller(new_controller: BattleController) -> void:
 	controller.battle_ended.connect(announce_result)
 
 	_build_bar_for_catalog()
+	_build_ability_bar()
 	castle_bar.max_value = controller.castle_max_health()
 	castle_bar.value = controller.castle_current_health()
 	_on_currency_changed({"gold": controller.wallet.gold})
@@ -67,6 +70,7 @@ func bind_controller(new_controller: BattleController) -> void:
 
 func _process(_delta: float) -> void:
 	_refresh_wave_line()
+	_refresh_ability_buttons()
 	enemies_label.text = tr("UI_ENEMIES_FORMAT").format([controller.registry.count()])
 	if toast_label.visible and Time.get_ticks_msec() >= _toast_until_ms:
 		toast_label.visible = false
@@ -82,6 +86,9 @@ func _exit_tree() -> void:
 
 func announce_result(victory: bool) -> void:
 	result_label.text = tr("UI_VICTORY") if victory else tr("UI_DEFEAT")
+	if victory:
+		var stars := controller.saved_stage_stars(controller.stage.id)
+		result_label.text += "\n" + tr("UI_STARS_FORMAT").format([stars])
 	result_overlay.visible = true
 
 
@@ -99,7 +106,7 @@ func _build_bar_for_catalog() -> void:
 
 func _refresh_build_buttons() -> void:
 	for definition in controller.tower_catalog:
-		var button: Button = _build_buttons[definition.id]
+		var button: Button = _build_buttons.get(definition.id)
 		if button == null:
 			continue
 		var armed: bool = controller.is_build_armed() \
@@ -110,6 +117,45 @@ func _refresh_build_buttons() -> void:
 			title, definition.cost, " <<" if armed else "",
 		])
 		button.disabled = not armed and not controller.wallet.can_afford(definition.cost)
+
+
+# --- Ability bar ---------------------------------------------------------------
+
+func _build_ability_bar() -> void:
+	for definition in controller.ability_system().definitions:
+		var button := Button.new()
+		button.custom_minimum_size = Vector2(150, 60)
+		button.pressed.connect(_on_ability_button_pressed.bind(definition))
+		ability_bar.add_child(button)
+		_ability_buttons[definition.id] = button
+
+
+func _refresh_ability_buttons() -> void:
+	var system := controller.ability_system()
+	for definition in system.definitions:
+		var button: Button = _ability_buttons.get(definition.id)
+		if button == null:
+			continue
+		var remaining := int(ceil(system.cooldown_remaining(definition)))
+		var title: String = tr(definition.display_key) \
+				if definition.display_key != "" else definition.display_name
+		var armed: bool = system.armed_ability() == definition
+		button.text = "{0}{1}\n{2}".format([
+			title,
+			" <<" if armed else "",
+			tr("UI_READY") if remaining <= 0 else "{0}s".format([remaining]),
+		])
+		var affordable: bool = definition.gold_cost <= 0 \
+				or controller.wallet.can_afford(definition.gold_cost)
+		button.disabled = armed or remaining > 0 or not affordable
+
+
+func _on_ability_button_pressed(definition: AbilityDefinition) -> void:
+	if controller.ability_system().armed_ability() == definition:
+		controller.ability_system().cancel_arm()
+	else:
+		controller.arm_ability(definition)
+	_refresh_ability_buttons()
 
 
 # --- Event reactions ----------------------------------------------------------

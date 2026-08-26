@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AbilityDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ability_definition.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+id = "ability.meteor.strike"
+display_key = "ABILITY_METEOR"
+display_name = "Meteor Strike"
+version = 1
+icon_color = Color(0.95, 0.45, 0.12, 1)
+cooldown_seconds = 25.0
+gold_cost = 75
+cast_delay_seconds = 0.9
+radius = 140.0
+effect_type = 0
+damage_type = 2
+damage = 60

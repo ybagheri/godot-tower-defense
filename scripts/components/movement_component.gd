@@ -9,14 +9,24 @@ extends GameComponent
 signal destination_reached
 
 var speed: float = 80.0
-## Multiplicative modifier reserved for slow/freeze effects.
+## Multiplicative modifier reserved for slow effects.
 var speed_multiplier: float = 1.0
+## Hard stop used by freeze effects; overrides the multiplier.
+var frozen: bool = false
 
 var current_path: PathDefinition = null
 
 var _waypoint_index: int = 0
 var _finished: bool = false
 var _running: bool = false
+
+
+func set_frozen(value: bool) -> void:
+	frozen = value
+
+
+func is_frozen() -> bool:
+	return frozen
 
 
 ## Assigns the route; resets progress so pooled entities restart cleanly.
@@ -54,6 +64,8 @@ func advance(delta: float) -> void:
 	if entity == null:
 		return
 	var step := speed * speed_multiplier * delta
+	if frozen:
+		step = 0.0
 	while step > 0.0 and not _finished:
 		var target := current_path.waypoints[_waypoint_index]
 		var to_target := target - entity.position

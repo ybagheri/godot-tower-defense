@@ -2,6 +2,51 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [0.5.0] - 2026-08-26
+
+### Added — Milestone 5: Vertical Slice content & systems (Phase 3, in progress)
+
+- **Ability system** (SPEC-0015 v1): `AbilityDefinition` +
+  `AbilitySystem` with arm->tap-cast flow, gold costs, per-ability
+  cooldowns, deterministic `advance()` timing; two shipped abilities:
+  Meteor Strike (delayed AoE fire damage) and Winter's Grasp (freeze).
+- **Audio** (SPEC-0014): `AudioManager` autoload with event->sound mapping,
+  voice cap (10), per-sound throttling, music looping on the Music bus;
+  `AudioDefinition` resources; 8 SFX + battle drone loop synthesized by
+  `tools/generate_sfx.gd` (project-generated provenance, ASSUMPTION A9).
+- **Save** (SPEC-0012 v1): `SaveManager` autoload - versioned JSON at
+  user://save/save_001.json, section store/load, corrupt-file quarantine,
+  future-version rejection, migration hook; `ProgressionTracker` records
+  best star rating per stage (>=70% -> 3 stars per SPEC-0011); victory
+  overlay shows stars.
+- **New towers**: Arcane Spire (magic damage bypasses armor) and Bombard
+  (high damage, ground-only, crits) - added purely as data + visuals,
+  zero core-code changes (scalability proof per §46).
+- **Elite enemy**: Fallen Knight (armored, magic-resistant) woven into
+  waves 3-5; stage now fields 4 enemy types incl. boss.
+- **VFX**: pooled expanding-ring bursts for deaths, gate arrivals, meteor
+  explosion and frost pulse (`BattleVfx`, `BurstEffect`).
+- HUD ability bar with live cooldown text and ready state.
+
+### Fixed
+
+- **M4 regression**: dead/goal-reached enemies were never removed from the
+  tree. New `EnemyLifecycleSystem` deactivates + fades deaths and despawns
+  arrivals; out-of-tree entities free immediately.
+- Programmatic components no longer flagged duplicate when their entity
+  later enters the tree.
+- HUD binds after all systems are wired (ability bar built from live
+  catalog); dictionary lookups defensive.
+
+### Validated
+
+- 130 tests / 20 suites ALL PASSING (ability, audio, save, lifecycle,
+  progression, extended content validation).
+- validate_scripts: 48 scripts clean; import clean.
+- Live headless run (9000 frames): 2 waves started, 16 enemies spawned
+  across goblin/wisp/knight types, wave completed, castle damaged 11x,
+  ZERO script errors.
+
 ## [0.4.0] - 2026-08-26
 
 ### Added — Milestone 4: First Playable (Phase 2 complete)
