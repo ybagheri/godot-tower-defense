@@ -30,9 +30,26 @@ and Android SDK this sandbox lacks):
 **Fetch your APK:** repository on GitHub → *Actions* → latest
 successful run → artifact **godottd-debug-apk**.
 
-Release-signed builds additionally require the four manual items below
-(keystore secrets via GitHub *Settings → Secrets*, wired into a release
-job) — not yet configured by design; never commit keystores.
+### Current CI state (2026-08-26)
+
+- ✅ `test` job green on GitHub runners (import, compile check, 150+
+  tests, stress smoke).
+- ✅ Android job installs Godot, templates (from the `ci-assets` branch —
+  the official 1.28 GB tpz is unreachable/throttled from runners),
+  JDK 17, Android SDK, build-tools 34, and a throwaway debug keystore.
+- ❌ The final `--export-debug` invocation fails; cause not yet read —
+  **open the failed run → artifact `android-export-diagnostics`**
+  (~1 KB text: env, editor settings, template listing, full Godot log)
+  and check the job summary pane. Two likely culprits, in order:
+  1. Editor-settings keys need adjusting to what the log says verbatim
+     (`export/android/*` in
+     `~/.config/godot/editor_settings-<version>.tres`, written by the
+     workflow).
+  2. `apksigner` resolution inside `$ANDROID_HOME/build-tools/<ver>`.
+
+Release-signed builds additionally require keystore secrets via GitHub
+*Settings → Secrets*, wired into a release job — intentionally not
+configured yet; never commit keystores.
 
 Local verification status in THIS sandbox: preset parsing verified;
 templates/JDK/SDK absent so APK remains NOT VERIFIED here — that is now
