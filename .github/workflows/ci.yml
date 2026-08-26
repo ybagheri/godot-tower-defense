@@ -114,8 +114,24 @@ jobs:
       - name: Export debug APK
         run: |
           ~/godot-bin/godot --headless --path . --import
-          ~/godot-bin/godot --headless --path . \
-            --export-debug "Android Debug" exports/godottd-debug.apk
+          set -o pipefail
+          ~/godot-bin/godot --headless --path . --verbose \
+            --export-debug "Android Debug" exports/godottd-debug.apk \
+            2>&1 | tee export_log.txt
+          {
+            echo "### Export tail"
+            echo '```'
+            tail -40 export_log.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload export log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: export-log
+          path: export_log.txt
+          if-no-files-found: ignore
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
