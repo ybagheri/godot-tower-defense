@@ -9,7 +9,7 @@ config_version=5
 config/name="godot-tower-defense"
 config/description="A production-quality, data-driven Dark Medieval Fantasy Tower Defense game."
 config/version="0.4.0"
-run/main_scene="res://scenes/game/battle.tscn"
+run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -24,6 +24,7 @@ ResourceManager="*res://scripts/managers/resource_manager.gd"
 PoolManager="*res://scripts/managers/pool_manager.gd"
 AudioManager="*res://scripts/managers/audio_manager.gd"
 SaveManager="*res://scripts/managers/save_manager.gd"
+SceneManager="*res://scripts/managers/scene_manager.gd"
 EventProbe="*res://scripts/debug/event_probe.gd"
 [display]
 

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CampaignDefinition" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/campaign_definition.gd" id="1_def"]
+[ext_resource type="Script" path="res://scripts/resources/stage_entry_definition.gd" id="2_entry"]
+[ext_resource type="Resource" path="res://resources/stages/stage_001_test_range.tres" id="3_s1"]
+[ext_resource type="Resource" path="res://resources/stages/stage_002_twin_roads.tres" id="4_s2"]
+
+[sub_resource type="Resource" id="entry_1"]
+script = ExtResource("2_entry")
+stage = ExtResource("3_s1")
+
+[sub_resource type="Resource" id="entry_2"]
+script = ExtResource("2_entry")
+stage = ExtResource("4_s2")
+
+[resource]
+script = ExtResource("1_def")
+id = "campaign.001.northern_march"
+display_key = "CAMPAIGN_NORTHERN_MARCH"
+display_name = "The Northern March"
+version = 1
+entries = [SubResource("entry_1"), SubResource("entry_2")]

@@ -15,6 +15,10 @@ extends GameResource
 @export var starting_gold: int = 250
 @export var castle_max_health: int = 100
 
+## Visual map scene (root Node2D containing a "Castle" GameEntity). Loaded
+## dynamically by the battle controller so one battle scene serves every map.
+@export var map_scene: PackedScene
+
 
 func validate() -> Dictionary:
 	var report := super.validate()
@@ -27,6 +31,8 @@ func validate() -> Dictionary:
 		errors.append("%s: starting_gold must be >= 0" % id)
 	if prep_time_seconds < 0.0:
 		errors.append("%s: prep_time_seconds must be >= 0" % id)
+	if map_scene == null:
+		report.warnings.append("%s has no map_scene (headless/test stages only)" % id)
 	for wave: WaveDefinition in waves:
 		errors.append_array(wave.validate().errors)
 	for path_id_key: String in paths.keys():

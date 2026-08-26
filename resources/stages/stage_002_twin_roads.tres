@@ -1,0 +1,137 @@
+[gd_resource type="Resource" script_class="StageDefinition" load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/stage_definition.gd" id="1_stage"]
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="2_path"]
+[ext_resource type="Script" path="res://scripts/resources/wave_definition.gd" id="3_wave"]
+[ext_resource type="Script" path="res://scripts/resources/spawn_group_definition.gd" id="4_group"]
+[ext_resource type="PackedScene" path="res://scenes/maps/twin_roads.tscn" id="5_map"]
+
+[sub_resource type="Resource" id="path_south"]
+script = ExtResource("2_path")
+id = "stage002.south"
+display_name = "South Road"
+waypoints = PackedVector2Array(80, 640, 450, 640, 450, 420, 830, 420, 830, 560, 1105, 480)
+path_type = 0
+
+[sub_resource type="Resource" id="path_north"]
+script = ExtResource("2_path")
+id = "stage002.north"
+display_name = "North Pass"
+waypoints = PackedVector2Array(90, 90, 640, 70, 640, 240, 1105, 330)
+path_type = 1
+
+[sub_resource type="Resource" id="g_w1_a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 8
+spawn_interval = 1.1
+initial_delay = 0.0
+path_id = "stage002.south"
+
+[sub_resource type="Resource" id="wave_1"]
+script = ExtResource("3_wave")
+id = "stage002.wave_1"
+display_name = "Scouts from the South"
+version = 1
+wave_number = 1
+spawn_groups = [SubResource("g_w1_a")]
+reward_gold = 45
+
+[sub_resource type="Resource" id="g_w2_a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 10
+spawn_interval = 1.0
+initial_delay = 0.0
+path_id = "stage002.south"
+
+[sub_resource type="Resource" id="g_w2_b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 6
+spawn_interval = 0.7
+initial_delay = 4.0
+path_id = "stage002.north"
+
+[sub_resource type="Resource" id="wave_2"]
+script = ExtResource("3_wave")
+id = "stage002.wave_2"
+display_name = "Pincers"
+version = 1
+wave_number = 2
+spawn_groups = [SubResource("g_w2_a"), SubResource("g_w2_b")]
+reward_gold = 60
+
+[sub_resource type="Resource" id="g_w3_a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 3
+spawn_interval = 2.4
+initial_delay = 0.0
+path_id = "stage002.south"
+
+[sub_resource type="Resource" id="g_w3_b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 10
+spawn_interval = 0.6
+initial_delay = 5.0
+path_id = "stage002.north"
+
+[sub_resource type="Resource" id="wave_3"]
+script = ExtResource("3_wave")
+id = "stage002.wave_3"
+display_name = "Steel and Wind"
+version = 1
+wave_number = 3
+spawn_groups = [SubResource("g_w3_a"), SubResource("g_w3_b")]
+reward_gold = 75
+
+[sub_resource type="Resource" id="g_w4_boss"]
+script = ExtResource("4_group")
+enemy_id = "enemy.ogre.boss"
+count = 1
+spawn_interval = 1.0
+initial_delay = 3.0
+path_id = "stage002.south"
+
+[sub_resource type="Resource" id="g_w4_goblins"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 12
+spawn_interval = 1.0
+initial_delay = 0.0
+path_id = "stage002.south"
+
+[sub_resource type="Resource" id="g_w4_wisps"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 8
+spawn_interval = 0.65
+initial_delay = 6.0
+path_id = "stage002.north"
+
+[sub_resource type="Resource" id="wave_4"]
+script = ExtResource("3_wave")
+id = "stage002.wave_4"
+display_name = "The Warlord's March"
+version = 1
+wave_number = 4
+spawn_groups = [SubResource("g_w4_boss"), SubResource("g_w4_goblins"), SubResource("g_w4_wisps")]
+is_boss_wave = true
+reward_gold = 130
+
+[resource]
+script = ExtResource("1_stage")
+id = "stage.002.twin_roads"
+display_key = "STAGE_TWIN_ROADS"
+display_name = "Twin Roads"
+waves = [SubResource("wave_1"), SubResource("wave_2"), SubResource("wave_3"), SubResource("wave_4")]
+paths = {
+"stage002.south": SubResource("path_south"),
+"stage002.north": SubResource("path_north")
+}
+prep_time_seconds = 7.0
+starting_gold = 280
+castle_max_health = 100
+map_scene = ExtResource("5_map")

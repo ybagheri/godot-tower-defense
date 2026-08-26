@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="StageDefinition" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="StageDefinition" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/stage_definition.gd" id="1_stage"]
 [ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="2_path"]
 [ext_resource type="Script" path="res://scripts/resources/wave_definition.gd" id="3_wave"]
 [ext_resource type="Script" path="res://scripts/resources/spawn_group_definition.gd" id="4_group"]
+[ext_resource type="PackedScene" path="res://scenes/maps/test_range.tscn" id="5_map"]
 
 [sub_resource type="Resource" id="path_main"]
 script = ExtResource("2_path")
@@ -159,3 +160,4 @@ paths = {
 prep_time_seconds = 6.0
 starting_gold = 220
 castle_max_health = 100
+map_scene = ExtResource("5_map")

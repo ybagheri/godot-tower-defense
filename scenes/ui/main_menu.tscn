@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
+[ext_resource type="Resource" path="res://resources/campaigns/campaign_001.tres" id="2_campaign"]
+
+[node name="MainMenu" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")
+campaign = ExtResource("2_campaign")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.075, 0.078, 0.063, 1)
+
+[node name="Center" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -260.0
+offset_right = 400.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Center"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 44
+text = "GODOT TOWER DEFENSE"
+
+[node name="Subtitle" type="Label" parent="Center"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+modulate = Color(1, 1, 1, 0.65)
+text = "a dark medieval defense"
+
+[node name="Spacer" type="Control" parent="Center"]
+custom_minimum_size = Vector2(0, 28)
+
+[node name="StageList" type="VBoxContainer" parent="Center"]
+unique_name_in_owner = true
+alignment = 1
+
+[node name="Spacer2" type="Control" parent="Center"]
+custom_minimum_size = Vector2(0, 24)
+
+[node name="QuitButton" type="Button" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 52)
+size_flags_horizontal = 4
+text = "Quit"

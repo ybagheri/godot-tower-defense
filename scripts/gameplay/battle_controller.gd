@@ -20,13 +20,15 @@ signal battle_ended(victory: bool)
 @export var battle_music_id: String = "music.battle"
 @export var balance: BalanceDefinition
 
-## Scene wiring (resolved in _ready; NodePaths avoid cross-instance
-## export-resolution ordering issues).
+## Scene wiring. castle_path is a FALLBACK for editor-authored battles;
+## campaign stages resolve the castle from their dynamically loaded map
+## (node named "Castle" under the map root).
 @export var entities_path: NodePath
 @export var castle_path: NodePath
 @export var ring_path: NodePath
 @export var vfx_path: NodePath
 @export var preview_path: NodePath
+@export var map_holder_path: NodePath
 
 var wallet := EconomySystem.new()
 var registry := EnemyRegistry.new()
@@ -56,10 +58,12 @@ func _ready() -> void:
 	get_tree().paused = false
 
 	entities_container = get_node_or_null(entities_path) as Node2D
-	castle_entity = get_node_or_null(castle_path) as GameEntity
 	selection_ring = get_node_or_null(ring_path) as SelectionRing
 	vfx_layer = get_node_or_null(vfx_path) as BattleVfx
 	placement_preview = get_node_or_null(preview_path) as PlacementPreview
+
+	_resolve_stage()
+	_instantiate_map()
 
 	var tap_layer := get_node_or_null("WorldTapLayer") as WorldTapLayer
 	if tap_layer != null:
@@ -274,6 +278,37 @@ func selected_tower() -> GameEntity:
 
 
 # --- Internals ---------------------------------------------------------------
+
+## A queued campaign selection overrides the editor-assigned default stage,
+## letting one battle scene serve the whole campaign (SPEC-0011).
+func _resolve_stage() -> void:
+	var router := get_node_or_null("/root/SceneManager")
+	if router != null:
+		var pending: String = router.consume_pending_stage()
+		if pending != "":
+			var loaded := load(pending) as StageDefinition
+			if loaded != null:
+				stage = loaded
+			else:
+				push_error("BattleController: queued stage '%s' failed to load" % pending)
+
+
+## Spawns this stage's visual map and resolves the castle from inside it.
+func _instantiate_map() -> void:
+	castle_entity = null
+	var holder := get_node_or_null(map_holder_path) as Node2D
+	if stage != null and stage.map_scene != null and holder != null:
+		holder.add_child(stage.map_scene.instantiate())
+	if not castle_path.is_empty():
+		castle_entity = get_node_or_null(castle_path) as GameEntity
+	if castle_path.is_empty() and holder != null:
+		# Maps may wrap their layout in a root node; search recursively and
+		# un-owned so instanced scene children are found.
+		for candidate in holder.find_children("Castle", "", true, false):
+			if candidate is GameEntity:
+				castle_entity = candidate
+				break
+
 
 ## Registers exported content with the ResourceManager so gameplay systems
 ## resolve everything through ids (SPEC-0001). Idempotent across reloads.

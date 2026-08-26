@@ -1,7 +1,6 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=27 format=3]
 
 [ext_resource type="Script" path="res://scripts/gameplay/battle_controller.gd" id="1_controller"]
-[ext_resource type="PackedScene" path="res://scenes/maps/test_range.tscn" id="2_map"]
 [ext_resource type="Script" path="res://scripts/utilities/world_tap_layer.gd" id="3_tap"]
 [ext_resource type="Script" path="res://scripts/utilities/selection_ring.gd" id="4_ring"]
 [ext_resource type="Script" path="res://scripts/utilities/battle_vfx.gd" id="5_vfx"]
@@ -37,12 +36,13 @@ ability_catalog = Array[ExtResource("16_meteor")]([ExtResource("16_meteor"), Ext
 audio_catalog = Array[ExtResource("18_s1")]([ExtResource("18_s1"), ExtResource("19_s2"), ExtResource("20_s3"), ExtResource("21_s4"), ExtResource("22_s5"), ExtResource("23_s6"), ExtResource("24_s7"), ExtResource("25_s8"), ExtResource("26_m1")])
 balance = ExtResource("8_balance")
 entities_path = NodePath("Entities")
-castle_path = NodePath("Map/Castle")
+castle_path = NodePath("")
 ring_path = NodePath("SelectionRing")
 vfx_path = NodePath("Vfx")
 preview_path = NodePath("PlacementPreview")
+map_holder_path = NodePath("MapHolder")
 
-[node name="Map" parent="." instance=ExtResource("2_map")]
+[node name="MapHolder" type="Node2D" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
 
