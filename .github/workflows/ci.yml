@@ -83,17 +83,31 @@ jobs:
           key: tpl-android-${{ env.GODOT_VERSION }}
 
       - name: Install Android export templates
+        id: tpl_install
         if: steps.tpl-cache.outputs.cache-hit != 'true'
         run: |
+          set -x
+          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_${GODOT_VERSION}_export_templates.tpz"
+          echo "### Template install" >> "$GITHUB_STEP_SUMMARY"
+          for attempt in 1 2 3; do
+            echo "attempt $attempt" | tee -a summary_tpl.txt
+            if curl --fail --location --retry 3 --retry-delay 10 \
+                 -o /tmp/templates.tpz "$URL" 2>> summary_tpl.txt; then
+              SIZE=$(stat -c%s /tmp/templates.tpz || echo 0)
+              echo "downloaded bytes: $SIZE" | tee -a summary_tpl.txt
+              [ "$SIZE" -gt 100000000 ] && break
+            fi
+            sleep 15
+          done
+          cat summary_tpl.txt >> "$GITHUB_STEP_SUMMARY" || true
+          unzip -t /tmp/templates.tpz > /dev/null
           mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}
-          curl -sL -o /tmp/templates.tpz \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_${GODOT_VERSION}_export_templates.tpz"
           # Selective extract: only the two Android template APKs (~90 MB),
           # not the full 1.28 GB pack.
           unzip -j -o /tmp/templates.tpz 'templates/android_*' \
             -d ~/.local/share/godot/export_templates/${GODOT_VERSION}/
           rm /tmp/templates.tpz
-          ls -la ~/.local/share/godot/export_templates/${GODOT_VERSION}/
+          ls -la ~/.local/share/godot/export_templates/${GODOT_VERSION}/ | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
