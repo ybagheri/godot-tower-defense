@@ -1,0 +1,50 @@
+# Changelog
+
+All notable changes to the **godot-tower-defense** project are documented here.
+
+## [0.2.0] - 2026-08-26
+
+### Added — Milestone 2: Core Framework (Phase 1, in progress)
+
+- `EventBus` autoload: publish/subscribe event system per SPEC-0004 with
+  allocation-free dispatch and safe mid-dispatch unsubscription.
+- `GameEvents`: central catalog of event names from SPEC-0004..0015.
+- `GameResource` base class (SPEC-0001): id/version/display metadata plus
+  error/warning validation contract.
+- `ResourceManager` autoload (SPEC-0001 registry): validated registration,
+  lookup by id, category queries; gameplay systems never load files directly.
+- `GameEntity` (SPEC-0002): component container with lifecycle
+  CREATED -> ACTIVE <-> DISABLED -> DESTROYED, scene-child auto-registration,
+  programmatic attachment, tags.
+- `GameComponent` (SPEC-0003): capability base with setup/activate/deactivate/
+  remove hooks and enabled flag.
+- `PoolManager` autoload (ARCH-0001 pooling): keyed generic pools with factory
+  callables, prewarm, idle caps.
+- Headless test harness (`tests/test_runner.tscn`, `TestSuite` base) with zero
+  external dependencies; 41 unit tests across 5 suites, all passing.
+- `tools/validate_scripts.gd`: compiles every script under `scripts/` headless.
+
+### Validated
+
+- `godot --headless --path . --import` exits clean.
+- `godot --headless --path . -s tools/validate_scripts.gd` -> VALIDATION OK.
+- `godot --headless --path . res://tests/test_runner.tscn` -> ALL SUITES PASSED (exit 0).
+
+### Fixed
+
+- Removed duplicated second copy of PROJECT_ROADMAP.md content.
+- `.gitignore` no longer excludes export_presets.cfg (needed for Android exports).
+
+## [0.1.0] - 2026-08-26
+
+### Added — Milestone 1: Project Bootstrap
+
+- `project.godot` targeting Godot 4.x with GL Compatibility renderer
+  (mobile-first), landscape orientation, touch emulation settings.
+- MIT LICENSE file (README already claimed MIT).
+- Original placeholder `icon.svg` (prototype quality, clearly labeled).
+- Audio bus layout: Master / Music / Effects / UI / Ambient / Voice (SPEC-0014).
+- Full folder skeleton mandated by ADR-0001; ADR-0001 resolves the
+  README-vs-Architecture-vs-owner structure conflict in favor of the owner
+  directive while preserving engine/game dependency layering.
+- README structure section rewritten to match the implemented layout.
