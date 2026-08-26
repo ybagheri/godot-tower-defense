@@ -115,8 +115,9 @@ jobs:
         run: |
           ~/godot-bin/godot --headless --path . --import
           set +e
-          ~/godot-bin/godot --headless --path . --verbose \
-            --export-debug "Android Debug" exports/godottd-debug.apk \
+          # Flag order matters: --export-debug must precede --path.
+          ~/godot-bin/godot --headless --export-debug --path . \
+            --verbose "Android Debug" exports/godottd-debug.apk \
             > export_log.txt 2>&1
           EXIT_CODE=$?
           {
@@ -126,7 +127,8 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           ls -la exports/ >> "$GITHUB_STEP_SUMMARY" || true
-          exit $EXIT_CODE
+          test -f exports/godottd-debug.apk && exit $EXIT_CODE
+          exit 1
 
       - name: Upload export log on failure
         if: failure()
