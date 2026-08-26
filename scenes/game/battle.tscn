@@ -1,10 +1,11 @@
-[gd_scene load_steps=27 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://scripts/gameplay/battle_controller.gd" id="1_controller"]
 [ext_resource type="PackedScene" path="res://scenes/maps/test_range.tscn" id="2_map"]
 [ext_resource type="Script" path="res://scripts/utilities/world_tap_layer.gd" id="3_tap"]
 [ext_resource type="Script" path="res://scripts/utilities/selection_ring.gd" id="4_ring"]
 [ext_resource type="Script" path="res://scripts/utilities/battle_vfx.gd" id="5_vfx"]
+[ext_resource type="Script" path="res://scripts/utilities/placement_preview.gd" id="6_preview"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
 [ext_resource type="Resource" path="res://resources/stages/stage_001_test_range.tres" id="7_stage"]
 [ext_resource type="Resource" path="res://resources/balance/balance_default.tres" id="8_balance"]
@@ -39,6 +40,7 @@ entities_path = NodePath("Entities")
 castle_path = NodePath("Map/Castle")
 ring_path = NodePath("SelectionRing")
 vfx_path = NodePath("Vfx")
+preview_path = NodePath("PlacementPreview")
 
 [node name="Map" parent="." instance=ExtResource("2_map")]
 
@@ -47,6 +49,10 @@ vfx_path = NodePath("Vfx")
 [node name="Vfx" type="Node2D" parent="."]
 z_index = 40
 script = ExtResource("5_vfx")
+
+[node name="PlacementPreview" type="Node2D" parent="."]
+z_index = 45
+script = ExtResource("6_preview")
 
 [node name="WorldTapLayer" type="Node2D" parent="."]
 script = ExtResource("3_tap")

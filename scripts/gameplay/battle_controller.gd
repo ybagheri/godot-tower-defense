@@ -26,6 +26,7 @@ signal battle_ended(victory: bool)
 @export var castle_path: NodePath
 @export var ring_path: NodePath
 @export var vfx_path: NodePath
+@export var preview_path: NodePath
 
 var wallet := EconomySystem.new()
 var registry := EnemyRegistry.new()
@@ -37,6 +38,7 @@ var entities_container: Node2D = null
 var castle_entity: GameEntity = null
 var selection_ring: SelectionRing = null
 var vfx_layer: BattleVfx = null
+var placement_preview: PlacementPreview = null
 
 var _rewards: RewardSystem = null
 var _castle_system: CastleSystem = null
@@ -57,6 +59,11 @@ func _ready() -> void:
 	castle_entity = get_node_or_null(castle_path) as GameEntity
 	selection_ring = get_node_or_null(ring_path) as SelectionRing
 	vfx_layer = get_node_or_null(vfx_path) as BattleVfx
+	placement_preview = get_node_or_null(preview_path) as PlacementPreview
+
+	var tap_layer := get_node_or_null("WorldTapLayer") as WorldTapLayer
+	if tap_layer != null:
+		tap_layer.controller = self
 
 	_register_catalogs()
 	_setup_audio()
@@ -108,12 +115,11 @@ func _ready() -> void:
 
 	# Bind UI/input LAST so every system is fully wired when the HUD builds
 	# bars from live catalogs.
+	if placement_preview != null:
+		placement_preview.controller = self
 	var hud := get_node_or_null("HUD") as HudController
 	if hud != null:
 		hud.bind_controller(self)
-	var tap_layer := get_node_or_null("WorldTapLayer") as WorldTapLayer
-	if tap_layer != null:
-		tap_layer.controller = self
 
 	EventBus.subscribe(GameEvents.STAGE_COMPLETED, _on_stage_completed)
 	EventBus.subscribe(GameEvents.CASTLE_DESTROYED, _on_castle_destroyed)
@@ -201,6 +207,13 @@ func try_build_at(world_position: Vector2) -> void:
 func select_tower(tower: GameEntity) -> void:
 	_selected_tower = tower
 	selection_changed.emit(tower)
+
+
+## Placement validity at a world position for the armed tower (UI preview).
+func placement_result_for(world_position: Vector2) -> Dictionary:
+	if not is_build_armed():
+		return {"ok": false, "reason": "not_armed"}
+	return building.check_placement(_armed_definition, world_position)
 
 
 ## Tap routing: ability cast > tower placement > tower selection.

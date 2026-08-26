@@ -10,9 +10,9 @@
 
 Current Phase:
 
-- Documentation
-- Architecture
-- Framework Design
+- Vertical Slice playable (Phase 3)
+- Core framework complete (Phase 1)
+- Gameplay prototype complete (Phase 2)
 
 ---
 

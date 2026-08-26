@@ -71,6 +71,13 @@ func test_battle_scene_bindings_resolve() -> void:
 		assert_true(ResourceManager.has(STAGE.id), "stage registered for systems")
 		assert_true(controller.waves.state != WaveSystem.State.IDLE, "battle started")
 		assert_false(controller.is_build_armed(), "build mode starts disarmed")
+		controller.arm_building(controller.tower_catalog[0])
+		assert_false(controller.placement_result_for(Vector2(200, 120)).ok,
+				"tile ON the route rejected by placement check")
+		assert_true(controller.placement_result_for(Vector2(200, 300)).ok,
+				"open ground accepted (affordable, clear)")
+		controller.cancel_building()
+
 
 	unstage(scene)
 	scene.free()

@@ -30,8 +30,11 @@ func _on_enemy_died(payload: Dictionary) -> void:
 	var loot: LootComponent = entity.get_component(LootComponent)
 	if loot != null and loot.reward_gold > 0:
 		_wallet.add(loot.reward_gold)
-		EventBus.publish(GameEvents.GOLD_EARNED,
-				{"amount": loot.reward_gold, "source": "enemy_died"})
+		EventBus.publish(GameEvents.GOLD_EARNED, {
+			"amount": loot.reward_gold,
+			"source": "enemy_died",
+			"position": entity.position,
+		})
 
 
 func _on_wave_completed(payload: Dictionary) -> void:

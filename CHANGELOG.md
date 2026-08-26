@@ -2,6 +2,35 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [0.6.0] - 2026-08-26
+
+### Added — Milestone 6: Slice Polish + Android Groundwork
+
+- Floating combat text: pooled rising numbers for damage (crits marked),
+  "+gold" popups on kills; event-driven via BattleVfx with a 24-floater
+  screen cap and pool recycling.
+- Placement preview: ghost tower visual follows the pointer while armed,
+  with live attack-range circle tinted green/red by BuildingSystem validity.
+- Pause menu: resume/restart plus Master/Music/Effects volume sliders,
+  persisted through SaveManager settings section (SPEC-0049/0012) and
+  applied to audio buses on startup.
+- Music transitions: battle drone stops on victory/defeat so result stings
+  read cleanly.
+- Android groundwork: validated export_presets.cfg (Debug + Release,
+  arm64-v8a, immersive landscape, ETC2/ASTC project setting) and
+  docs/11_Release/ANDROID.md with exact maintainer setup steps.
+- exports/ added to .gitignore.
+
+### Validation status
+
+- 136 tests / 21 suites ALL PASSING (new: battle VFX pooling/cap/retire,
+  music transitions, placement checks through the wired battle scene).
+- validate_scripts 50 OK; import clean; live headless smoke run zero
+  script errors.
+- **Android APK build NOT VERIFIED** (honest): sandbox lacks export
+  templates, JDK 17 and the Android SDK. Preset parsing verified via
+  headless Godot error surface; remaining steps documented in REL-0001.
+
 ## [0.5.0] - 2026-08-26
 
 ### Added — Milestone 5: Vertical Slice content & systems (Phase 3, in progress)

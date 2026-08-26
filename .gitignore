@@ -39,3 +39,6 @@ web/
 # Temporary files
 *.log
 *.bak
+
+# Export outputs
+exports/

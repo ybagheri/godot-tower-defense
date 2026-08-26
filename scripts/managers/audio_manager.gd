@@ -101,6 +101,10 @@ func known_sound(sound_id: String) -> bool:
 	return _catalog.has(sound_id)
 
 
+func is_music_playing() -> bool:
+	return _music_player.playing
+
+
 func _acquire_voice() -> AudioStreamPlayer:
 	for player in _effect_players:
 		if not player.playing:
@@ -121,3 +125,6 @@ func _loop_music() -> void:
 func _on_game_event(payload: Dictionary, event_name: StringName) -> void:
 	for sound_id: String in EVENT_MAP[event_name]:
 		play_effect(sound_id)
+	# Battle music makes way for the result sting.
+	if event_name == &"stage_completed" or event_name == &"stage_failed":
+		stop_music()

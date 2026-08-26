@@ -146,3 +146,68 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 60)
 size_flags_horizontal = 4
 text = "Restart"
+
+[node name="PausePanel" type="CenterContainer" parent="Root"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="Panel" type="PanelContainer" parent="Root/PausePanel"]
+
+[node name="VBox" type="VBoxContainer" parent="Root/PausePanel/Panel"]
+custom_minimum_size = Vector2(380, 0)
+
+[node name="Title" type="Label" parent="Root/PausePanel/Panel/VBox"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+text = "Paused"
+
+[node name="MasterRow" type="HBoxContainer" parent="Root/PausePanel/Panel/VBox"]
+
+[node name="Label" type="Label" parent="Root/PausePanel/Panel/VBox/MasterRow"]
+custom_minimum_size = Vector2(110, 0)
+text = "Master"
+
+[node name="MasterSlider" type="HSlider" parent="Root/PausePanel/Panel/VBox/MasterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 24)
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="MusicRow" type="HBoxContainer" parent="Root/PausePanel/Panel/VBox"]
+
+[node name="Label" type="Label" parent="Root/PausePanel/Panel/VBox/MusicRow"]
+custom_minimum_size = Vector2(110, 0)
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="Root/PausePanel/Panel/VBox/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 24)
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="EffectsRow" type="HBoxContainer" parent="Root/PausePanel/Panel/VBox"]
+
+[node name="Label" type="Label" parent="Root/PausePanel/Panel/VBox/EffectsRow"]
+custom_minimum_size = Vector2(110, 0)
+text = "Effects"
+
+[node name="EffectsSlider" type="HSlider" parent="Root/PausePanel/Panel/VBox/EffectsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 24)
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="ResumeButton" type="Button" parent="Root/PausePanel/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 56)
+size_flags_horizontal = 4
+text = "Resume"

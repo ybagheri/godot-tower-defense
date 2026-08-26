@@ -58,3 +58,18 @@ func test_playback_survives_voice_cap() -> void:
 		audio.play_effect("sfx.build")
 	assert_true(audio._effect_players.size() <= audio.MAX_EFFECT_VOICES,
 			"voice cap respected")
+
+
+func test_stage_end_stops_music_for_result_sting() -> void:
+	var music := AudioDefinition.new()
+	music.id = "music.test"
+	music.display_name = "test music"
+	music.stream_path = "res://assets/audio/music/battle_loop.wav"
+	music.bus_category = "Music"
+	audio.setup([music])
+	assert_true(audio.play_music("music.test"), "music started")
+	assert_true(audio.is_music_playing(), "playing before stage end")
+	EventBus.publish(GameEvents.STAGE_COMPLETED, {})
+	assert_false(audio.is_music_playing(), "music stopped for victory sting")
+	EventBus.publish(GameEvents.STAGE_FAILED, {})
+	assert_false(audio.is_music_playing(), "stays stopped on defeat")

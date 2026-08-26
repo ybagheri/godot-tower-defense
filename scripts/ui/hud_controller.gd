@@ -22,6 +22,11 @@ extends CanvasLayer
 @onready var result_label: Label = %ResultLabel
 @onready var restart_button: Button = %RestartButton
 @onready var toast_label: Label = %ToastLabel
+@onready var pause_panel: CenterContainer = %PausePanel
+@onready var master_slider: HSlider = %MasterSlider
+@onready var music_slider: HSlider = %MusicSlider
+@onready var effects_slider: HSlider = %EffectsSlider
+@onready var resume_button: Button = %ResumeButton
 
 @export var controller: BattleController
 
@@ -35,6 +40,7 @@ func _ready() -> void:
 	result_overlay.visible = false
 	selection_panel.visible = false
 	toast_label.visible = false
+	pause_panel.visible = false
 
 
 ## Called by the BattleController after it resolves scene wiring. Children
@@ -67,11 +73,18 @@ func bind_controller(new_controller: BattleController) -> void:
 	_update_pause_button()
 	_refresh_wave_line()
 
+	resume_button.pressed.connect(_on_pause_pressed)
+	master_slider.drag_ended.connect(_on_volume_changed.bind("Master", master_slider))
+	music_slider.drag_ended.connect(_on_volume_changed.bind("Music", music_slider))
+	effects_slider.drag_ended.connect(_on_volume_changed.bind("Effects", effects_slider))
+	_restore_audio_settings()
+
 
 func _process(_delta: float) -> void:
 	_refresh_wave_line()
 	_refresh_ability_buttons()
 	enemies_label.text = tr("UI_ENEMIES_FORMAT").format([controller.registry.count()])
+	pause_panel.visible = controller.is_paused() and not result_overlay.visible
 	if toast_label.visible and Time.get_ticks_msec() >= _toast_until_ms:
 		toast_label.visible = false
 
@@ -289,6 +302,46 @@ func _show_toast(message: String) -> void:
 	toast_label.text = message
 	toast_label.visible = message != ""
 	_toast_until_ms = Time.get_ticks_msec() + 2000
+
+
+# --- Audio settings (persisted through SaveManager, SPEC-0012/0049) ---------
+
+func _save_manager() -> Node:
+	return get_node_or_null("/root/SaveManager")
+
+
+func _restore_audio_settings() -> void:
+	var save := _save_manager()
+	if save == null:
+		return
+	var settings: Dictionary = save.get_section("settings")
+	master_slider.value = float(settings.get("master", 1.0))
+	music_slider.value = float(settings.get("music", 0.8))
+	effects_slider.value = float(settings.get("effects", 1.0))
+	_apply_volume("Master", master_slider.value)
+	_apply_volume("Music", music_slider.value)
+	_apply_volume("Effects", effects_slider.value)
+
+
+func _on_volume_changed(changed: bool, bus_name: String, slider: HSlider) -> void:
+	if not changed:
+		return
+	_apply_volume(bus_name, slider.value)
+	var save := _save_manager()
+	if save == null:
+		return
+	var settings: Dictionary = save.get_section("settings")
+	settings["master"] = master_slider.value
+	settings["music"] = music_slider.value
+	settings["effects"] = effects_slider.value
+	save.store_section("settings", settings)
+	save.save_game()
+
+
+func _apply_volume(bus_name: String, linear: float) -> void:
+	var audio := get_node_or_null("/root/AudioManager")
+	if audio != null:
+		audio.set_bus_volume(bus_name, linear)
 
 
 func _restart() -> void:
