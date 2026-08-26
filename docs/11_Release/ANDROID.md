@@ -16,24 +16,27 @@ Related RFC: None
 
 ## Current Status
 
-`export_presets.cfg` ships two validated presets (**Android Debug**, **Android
-Release**, arm64-v8a, sensor landscape, immersive mode). Preset parsing is
-verified via headless Godot.
+**CI builds the debug APK automatically.** Every push to `main` runs
+`.github/workflows/ci.yml` on GitHub's runners (which have the disk, JDK 17
+and Android SDK this sandbox lacks):
 
-**APK builds are NOT VERIFIED in the development sandbox.** Missing, in order:
+1. `test` job: headless import + full script compile check + 150+ unit/
+   integration tests + a logic stress smoke gate.
+2. `android-debug-apk` job: installs Godot, extracts **only** the two
+   Android template APKs from the official pack (~90 MB of the 1.28 GB
+   tpz), generates a throwaway debug keystore, and exports
+   `godottd-debug.apk`.
 
-1. Export templates - the official pack is a single **1.28 GB** tpz
-   (`content-length` verified 2026-08-26); sandbox disk cannot hold it plus
-   an Android SDK. Selective extraction of only `templates/android_*.apk`
-   (~90 MB) IS viable on constrained machines:
-   ```bash
-   unzip -j Godot_v4.7.2-stable_export_templates.tpz 'templates/android_*' \
-       -d ~/.local/share/godot/export_templates/4.7.2.stable/
-   ```
-2. Java JDK 17.
-3. Android SDK (platform + build-tools; Godot uses `apksigner`/`zipalign`
-   even for non-gradle exports).
-4. A release keystore (never committed).
+**Fetch your APK:** repository on GitHub → *Actions* → latest
+successful run → artifact **godottd-debug-apk**.
+
+Release-signed builds additionally require the four manual items below
+(keystore secrets via GitHub *Settings → Secrets*, wired into a release
+job) — not yet configured by design; never commit keystores.
+
+Local verification status in THIS sandbox: preset parsing verified;
+templates/JDK/SDK absent so APK remains NOT VERIFIED here — that is now
+covered server-side instead.
 
 Logic-side performance headroom is proven separately (see
 `docs/10_Testing/PERF_BASELINE.md`): gameplay logic stays under 0.1 ms per
