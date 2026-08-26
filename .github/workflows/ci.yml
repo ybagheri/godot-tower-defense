@@ -75,42 +75,19 @@ jobs:
           mv /tmp/godot-extract/Godot_v${GODOT_VERSION}_linux.x86_64 ~/godot-bin/godot
           chmod +x ~/godot-bin/godot
 
-      - name: Cache export templates (android only, ~90MB extracted)
-        id: tpl-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.local/share/godot/export_templates
-          key: tpl-android-${{ env.GODOT_VERSION }}
-
-      - name: Install Android export templates
-        id: tpl_install
-        if: steps.tpl-cache.outputs.cache-hit != 'true'
+      - name: Install Android export templates (from ci-assets branch)
         run: |
-          set -x
-          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_${GODOT_VERSION}_export_templates.tpz"
-          echo "### Template install" >> "$GITHUB_STEP_SUMMARY"
-          for attempt in 1 2 3 4 5 6 7 8; do
-            echo "attempt $attempt" | tee -a summary_tpl.txt
-            # -C - resumes partial downloads: converges even when GitHub
-            # throttles multi-GB release asset egress.
-            if curl --fail --location -C - --max-time 900 \
-                 -o /tmp/templates.tpz "$URL" 2>> summary_tpl.txt; then
-              SIZE=$(stat -c%s /tmp/templates.tpz || echo 0)
-              echo "downloaded bytes: $SIZE" | tee -a summary_tpl.txt
-              [ "$SIZE" -eq 1281349702 ] && break
-            fi
-            echo "incomplete ($(stat -c%s /tmp/templates.tpz 2>/dev/null || echo 0) bytes); retrying..." | tee -a summary_tpl.txt
-            sleep 30
-          done
-          cat summary_tpl.txt >> "$GITHUB_STEP_SUMMARY" || true
-          unzip -t /tmp/templates.tpz > /dev/null
-          mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}
-          # Selective extract: only the two Android template APKs (~90 MB),
-          # not the full 1.28 GB pack.
-          unzip -j -o /tmp/templates.tpz 'templates/android_*' \
-            -d ~/.local/share/godot/export_templates/${GODOT_VERSION}/
-          rm /tmp/templates.tpz
-          ls -la ~/.local/share/godot/export_templates/${GODOT_VERSION}/ | tee -a "$GITHUB_STEP_SUMMARY"
+          set -e
+          TPL_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          mkdir -p "$TPL_DIR"
+          # Templates ship on the ci-assets branch as <100MB git chunks
+          # (the official 1.28GB tpz is throttled/unreachable from runners).
+          git fetch --depth=1 origin ci-assets
+          git checkout FETCH_HEAD -- assets/android
+          cat assets/android/android_debug.apk.part*   > "$TPL_DIR/android_debug.apk"
+          cat assets/android/android_release.apk.part* > "$TPL_DIR/android_release.apk"
+          rm -rf assets
+          ls -la "$TPL_DIR" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
