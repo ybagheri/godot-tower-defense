@@ -26,6 +26,17 @@ func get_enemies() -> Array[GameEntity]:
 	return _enemies.duplicate()
 
 
+## First living boss on the field, or null (boss HUD bar).
+func get_boss() -> GameEntity:
+	_prune_invalid()
+	for enemy in _enemies:
+		if enemy.has_tag("boss"):
+			var health: HealthComponent = enemy.get_component(HealthComponent)
+			if health != null and health.is_alive():
+				return enemy
+	return null
+
+
 func count() -> int:
 	_prune_invalid()
 	return _enemies.size()

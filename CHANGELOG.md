@@ -2,6 +2,33 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [0.7.0] - 2026-08-26
+
+### Added — Milestone 8: Polish & Juice
+
+- Dark medieval UI theme resource (`theme_dark_medieval.tres`): stone
+  panels with aged-gold borders, themed buttons (normal/hover/pressed/
+  disabled), progress bars; applied to main menu and battle HUD.
+- Screen shake: trauma-based `CameraShake` camera reacting to castle
+  damage and impactful meteor hits (squared falloff, clamped, settles).
+- Boss health bar: HUD top-center panel appears while a living boss is on
+  the field, driven by `EnemyRegistry.get_boss()` and the entity's health.
+- Attack feedback: small muzzle bursts on every tower attack start.
+- Result overlay gained a Main Menu transition button (SceneManager).
+- Performance instrumentation (§28): EventProbe now prints periodic FPS +
+  worst-frame-time when GTD_EVENT_LOG=1.
+
+### Baseline measured (headless CI sandbox)
+
+~145 fps sustained logic rate; worst frame settles ~7 ms after the
+expected first-window startup spike (143 ms includes engine warmup).
+
+### Validation
+
+143 -> 151 tests / 23 suites ALL PASSING (shake math/bounds/settling,
+event-driven shake gating, boss lookup incl. dead-boss filtering, theme
+wiring across menu+HUD). validate_scripts 55 OK; live smoke zero errors.
+
 ## [0.6.0] - 2026-08-26
 
 ### Added — Milestone 6: Slice Polish + Android Groundwork

@@ -12,6 +12,10 @@ const WATCHED := {
 }
 
 var _counts: Dictionary = {}
+var _frames_since_report: int = 0
+var _elapsed_since_report: float = 0.0
+var _worst_frame_ms: float = 0.0
+const REPORT_INTERVAL_FRAMES := 600
 
 
 func _ready() -> void:
@@ -23,6 +27,21 @@ func _ready() -> void:
 		EventBus.subscribe(event_name, _on_event.bind(event_name))
 	print("[EventProbe] watching %d event types" % _counts.size())
 	_dump_tree.call_deferred()
+
+
+func _process(delta: float) -> void:
+	var frame_ms := delta * 1000.0
+	if frame_ms > _worst_frame_ms:
+		_worst_frame_ms = frame_ms
+	_frames_since_report += 1
+	_elapsed_since_report += delta
+	if _frames_since_report >= REPORT_INTERVAL_FRAMES:
+		var avg_fps := float(_frames_since_report) / maxf(_elapsed_since_report, 0.0001)
+		print("[PerfProbe] ~%d fps, worst frame %.2f ms" %
+				[int(avg_fps), _worst_frame_ms])
+		_frames_since_report = 0
+		_elapsed_since_report = 0.0
+		_worst_frame_ms = 0.0
 
 
 func _dump_tree() -> void:

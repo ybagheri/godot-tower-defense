@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/hud_controller.gd" id="1_hud"]
+[ext_resource type="Theme" path="res://resources/ui/theme_dark_medieval.tres" id="2_theme"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -10,6 +11,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+theme = ExtResource("2_theme")
 
 [node name="TopLeft" type="VBoxContainer" parent="Root"]
 offset_left = 16.0
@@ -31,6 +33,32 @@ text = "-"
 unique_name_in_owner = true
 theme_override_font_sizes/font_size = 16
 text = "Enemies: 0"
+
+[node name="BossBarPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -260.0
+offset_top = 10.0
+offset_right = 260.0
+offset_bottom = 62.0
+grow_horizontal = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/BossBarPanel"]
+
+[node name="BossNameLabel" type="Label" parent="Root/BossBarPanel/VBox"]
+unique_name_in_owner = true
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+text = "BOSS"
+
+[node name="BossHealthBar" type="ProgressBar" parent="Root/BossBarPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 18)
+max_value = 100.0
+value = 100.0
+show_percentage = false
 
 [node name="TopRight" type="HBoxContainer" parent="Root"]
 anchors_preset = 1
@@ -146,6 +174,12 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 60)
 size_flags_horizontal = 4
 text = "Restart"
+
+[node name="MenuButton" type="Button" parent="Root/ResultOverlay/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 48)
+size_flags_horizontal = 4
+text = "Main Menu"
 
 [node name="PausePanel" type="CenterContainer" parent="Root"]
 unique_name_in_owner = true

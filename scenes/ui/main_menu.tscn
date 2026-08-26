@@ -1,12 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
 [ext_resource type="Resource" path="res://resources/campaigns/campaign_001.tres" id="2_campaign"]
+[ext_resource type="Theme" path="res://resources/ui/theme_dark_medieval.tres" id="3_theme"]
 
 [node name="MainMenu" type="Control"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource("3_theme")
 script = ExtResource("1_menu")
 campaign = ExtResource("2_campaign")
 

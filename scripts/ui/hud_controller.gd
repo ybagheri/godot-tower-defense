@@ -27,6 +27,10 @@ extends CanvasLayer
 @onready var music_slider: HSlider = %MusicSlider
 @onready var effects_slider: HSlider = %EffectsSlider
 @onready var resume_button: Button = %ResumeButton
+@onready var boss_bar_panel: PanelContainer = %BossBarPanel
+@onready var boss_name_label: Label = %BossNameLabel
+@onready var boss_health_bar: ProgressBar = %BossHealthBar
+@onready var menu_button: Button = %MenuButton
 
 @export var controller: BattleController
 
@@ -74,6 +78,7 @@ func bind_controller(new_controller: BattleController) -> void:
 	_refresh_wave_line()
 
 	resume_button.pressed.connect(_on_pause_pressed)
+	menu_button.pressed.connect(_on_menu_pressed)
 	master_slider.drag_ended.connect(_on_volume_changed.bind("Master", master_slider))
 	music_slider.drag_ended.connect(_on_volume_changed.bind("Music", music_slider))
 	effects_slider.drag_ended.connect(_on_volume_changed.bind("Effects", effects_slider))
@@ -83,10 +88,39 @@ func bind_controller(new_controller: BattleController) -> void:
 func _process(_delta: float) -> void:
 	_refresh_wave_line()
 	_refresh_ability_buttons()
+	_refresh_boss_bar()
 	enemies_label.text = tr("UI_ENEMIES_FORMAT").format([controller.registry.count()])
 	pause_panel.visible = controller.is_paused() and not result_overlay.visible
 	if toast_label.visible and Time.get_ticks_msec() >= _toast_until_ms:
 		toast_label.visible = false
+
+
+## Boss readout appears only while a living boss is on the field.
+func _refresh_boss_bar() -> void:
+	var boss := controller.registry.get_boss()
+	boss_bar_panel.visible = boss != null
+	if boss == null:
+		return
+	var health: HealthComponent = boss.get_component(HealthComponent)
+	var definition := _definition_for_entity(boss)
+	boss_name_label.text = tr(definition.display_key) \
+			if definition != null and definition.display_key != "" \
+			else (definition.display_name if definition != null else tr("UI_BOSS"))
+	boss_health_bar.max_value = health.max_health
+	boss_health_bar.value = health.current_health
+
+
+## Resolves the EnemyDefinition backing a spawned entity via the registry id.
+func _definition_for_entity(entity: GameEntity) -> EnemyDefinition:
+	return ResourceManager.get_by_id(entity.entity_id) as EnemyDefinition
+
+
+func _on_menu_pressed() -> void:
+	var router := get_node_or_null("/root/SceneManager")
+	if router != null:
+		Engine.time_scale = 1.0
+		get_tree().paused = false
+		router.return_to_menu()
 
 
 func _exit_tree() -> void:

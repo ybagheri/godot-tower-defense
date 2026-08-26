@@ -23,11 +23,21 @@ var _active_texts: int = 0
 func _ready() -> void:
 	EventBus.subscribe(GameEvents.DAMAGE_DEALT, _on_damage_dealt)
 	EventBus.subscribe(GameEvents.GOLD_EARNED, _on_gold_earned)
+	EventBus.subscribe(GameEvents.ATTACK_STARTED, _on_attack_started)
 
 
 func _exit_tree() -> void:
 	EventBus.unsubscribe(GameEvents.DAMAGE_DEALT, _on_damage_dealt)
 	EventBus.unsubscribe(GameEvents.GOLD_EARNED, _on_gold_earned)
+	EventBus.unsubscribe(GameEvents.ATTACK_STARTED, _on_attack_started)
+
+
+func _on_attack_started(payload: Dictionary) -> void:
+	var attacker := payload.get("attacker") as GameEntity
+	if attacker == null or not is_instance_valid(attacker):
+		return
+	spawn_burst(attacker.position + Vector2(0, -18), Color(1.0, 0.9, 0.6),
+			4.0, 14.0, 0.14)
 
 
 func play_burst(position: Vector2, color_hint: String) -> void:
