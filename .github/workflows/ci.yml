@@ -89,20 +89,18 @@ jobs:
           set -x
           URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_${GODOT_VERSION}_export_templates.tpz"
           echo "### Template install" >> "$GITHUB_STEP_SUMMARY"
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4 5 6 7 8; do
             echo "attempt $attempt" | tee -a summary_tpl.txt
-            rm -f /tmp/templates.tpz
-            if curl --fail --location --retry 2 --retry-delay 10 \
+            # -C - resumes partial downloads: converges even when GitHub
+            # throttles multi-GB release asset egress.
+            if curl --fail --location -C - --max-time 900 \
                  -o /tmp/templates.tpz "$URL" 2>> summary_tpl.txt; then
               SIZE=$(stat -c%s /tmp/templates.tpz || echo 0)
               echo "downloaded bytes: $SIZE" | tee -a summary_tpl.txt
-              echo 'first 64 bytes:' | tee -a summary_tpl.txt
-              head -c 64 /tmp/templates.tpz | od -c | head -4 | tee -a summary_tpl.txt
-              [ "$SIZE" -gt 100000000 ] && break
+              [ "$SIZE" -eq 1281349702 ] && break
             fi
-            command -v wget >/dev/null && wget -q -O /tmp/templates.tpz "$URL" && \
-              [ "$(stat -c%s /tmp/templates.tpz)" -gt 100000000 ] && break
-            sleep 15
+            echo "incomplete ($(stat -c%s /tmp/templates.tpz 2>/dev/null || echo 0) bytes); retrying..." | tee -a summary_tpl.txt
+            sleep 30
           done
           cat summary_tpl.txt >> "$GITHUB_STEP_SUMMARY" || true
           unzip -t /tmp/templates.tpz > /dev/null
