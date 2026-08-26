@@ -43,6 +43,14 @@ static func create(definition: EnemyDefinition, path: PathDefinition, parent: No
 	entity.add_component(loot)
 	loot.configure(definition.reward_gold, definition.damage_to_castle)
 
+	if definition.visual_scene != null:
+		var visual := definition.visual_scene.instantiate()
+		if visual is Node2D:
+			entity.add_child(visual)
+		else:
+			push_error("EnemyFactory: visual_scene of '%s' has no Node2D root" % definition.id)
+			visual.free()
+
 	if parent != null:
 		parent.add_child(entity)
 

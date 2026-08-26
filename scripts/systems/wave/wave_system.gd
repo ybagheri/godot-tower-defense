@@ -103,6 +103,16 @@ func fail_stage() -> void:
 	_set_state(State.FAILED)
 
 
+## Seconds left before the next wave begins (0 outside preparation).
+func preparation_seconds_remaining() -> float:
+	return _prep_remaining if state == State.PREPARING else 0.0
+
+
+## Enemies still to spawn in the current wave (HUD readout).
+func spawns_remaining_in_wave() -> int:
+	return _timeline.size() - _timeline_cursor
+
+
 ## Advances simulation time; also called from _process during play.
 func advance(delta: float) -> void:
 	match state:

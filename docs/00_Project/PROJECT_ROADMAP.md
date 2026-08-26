@@ -203,7 +203,7 @@ systems/
 Status:
 
 ```
-IN PROGRESS
+COMPLETE
 ```
 
 ## Goal

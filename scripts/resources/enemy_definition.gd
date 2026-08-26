@@ -24,6 +24,10 @@ extends GameResource
 @export var flying: bool = false
 @export var is_boss: bool = false
 
+## Cosmetic-only scene (Node2D root with sprites/animations). Combat
+## components are always assembled by EnemyFactory regardless (ASSUMPTION A2).
+@export var visual_scene: PackedScene
+
 
 func validate() -> Dictionary:
 	var report := super.validate()

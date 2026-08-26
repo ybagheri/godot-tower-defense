@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/game_entity.gd" id="1_entity"]
+[ext_resource type="Script" path="res://scripts/components/health_component.gd" id="2_health"]
+[ext_resource type="Texture2D" path="res://assets/sprites/prototype/castle.svg" id="3_tex"]
+
+[node name="Castle" type="Node2D"]
+script = ExtResource("1_entity")
+entity_id = "castle.main"
+tags = PackedStringArray("castle")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -42)
+texture = ExtResource("3_tex")

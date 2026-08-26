@@ -26,6 +26,13 @@ extends GameResource
 
 @export_group("Targeting")
 @export var targeting_priority: TargetingComponent.Priority = TargetingComponent.Priority.FIRST
+@export var can_target_flying: bool = true
+
+## Cosmetic-only scene (Sprite2D root); combat assembly stays in the factory.
+@export var visual_scene: PackedScene
+
+## Ordered upgrade steps; level 1 is the base stats above (SPEC-0007).
+@export var upgrades: Array[TowerUpgradeDefinition] = []
 
 
 func validate() -> Dictionary:
@@ -45,4 +52,6 @@ func validate() -> Dictionary:
 		errors.append("%s: projectile_speed must be > 0 when using projectiles" % id)
 	if cost < 0:
 		errors.append("%s: cost must be >= 0" % id)
+	for upgrade: TowerUpgradeDefinition in upgrades:
+		errors.append_array(upgrade.validate(id))
 	return report

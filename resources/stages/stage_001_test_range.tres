@@ -1,0 +1,137 @@
+[gd_resource type="Resource" script_class="StageDefinition" load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/stage_definition.gd" id="1_stage"]
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="2_path"]
+[ext_resource type="Script" path="res://scripts/resources/wave_definition.gd" id="3_wave"]
+[ext_resource type="Script" path="res://scripts/resources/spawn_group_definition.gd" id="4_group"]
+
+[sub_resource type="Resource" id="path_main"]
+script = ExtResource("2_path")
+id = "stage001.main"
+display_name = "Main Route"
+waypoints = PackedVector2Array(90, 120, 420, 120, 420, 470, 830, 470, 830, 260, 1190, 260)
+path_type = 0
+
+[sub_resource type="Resource" id="group_w1_goblins"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 6
+spawn_interval = 1.2
+initial_delay = 0.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="wave_1"]
+script = ExtResource("3_wave")
+id = "stage001.wave_1"
+display_name = "First Scouts"
+version = 1
+wave_number = 1
+spawn_groups = [SubResource("group_w1_goblins")]
+is_boss_wave = false
+reward_gold = 40
+
+[sub_resource type="Resource" id="group_w2_goblins"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 10
+spawn_interval = 1.0
+initial_delay = 0.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="wave_2"]
+script = ExtResource("3_wave")
+id = "stage001.wave_2"
+display_name = "Warband Push"
+version = 1
+wave_number = 2
+spawn_groups = [SubResource("group_w2_goblins")]
+reward_gold = 50
+
+[sub_resource type="Resource" id="group_w3_goblins"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 8
+spawn_interval = 1.1
+initial_delay = 0.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="group_w3_wisps"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 4
+spawn_interval = 0.7
+initial_delay = 4.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="wave_3"]
+script = ExtResource("3_wave")
+id = "stage001.wave_3"
+display_name = "Wisps on the Wind"
+version = 1
+wave_number = 3
+spawn_groups = [SubResource("group_w3_goblins"), SubResource("group_w3_wisps")]
+reward_gold = 60
+
+[sub_resource type="Resource" id="group_w4_goblins"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 14
+spawn_interval = 0.8
+initial_delay = 0.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="group_w4_wisps"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 6
+spawn_interval = 0.6
+initial_delay = 5.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="wave_4"]
+script = ExtResource("3_wave")
+id = "stage001.wave_4"
+display_name = "The Long Assault"
+version = 1
+wave_number = 4
+spawn_groups = [SubResource("group_w4_goblins"), SubResource("group_w4_wisps")]
+reward_gold = 70
+
+[sub_resource type="Resource" id="group_w5_ogre"]
+script = ExtResource("4_group")
+enemy_id = "enemy.ogre.boss"
+count = 1
+spawn_interval = 1.0
+initial_delay = 2.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="group_w5_goblins"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 6
+spawn_interval = 1.4
+initial_delay = 0.0
+path_id = "stage001.main"
+
+[sub_resource type="Resource" id="wave_5"]
+script = ExtResource("3_wave")
+id = "stage001.wave_5"
+display_name = "Ogre Warlord"
+version = 1
+wave_number = 5
+spawn_groups = [SubResource("group_w5_goblins"), SubResource("group_w5_ogre")]
+is_boss_wave = true
+reward_gold = 120
+
+[resource]
+script = ExtResource("1_stage")
+id = "stage.001.test_range"
+display_key = "STAGE_TEST_RANGE"
+display_name = "Test Range"
+waves = [SubResource("wave_1"), SubResource("wave_2"), SubResource("wave_3"), SubResource("wave_4"), SubResource("wave_5")]
+paths = {
+"stage001.main": SubResource("path_main")
+}
+prep_time_seconds = 6.0
+starting_gold = 220
+castle_max_health = 100

@@ -27,11 +27,24 @@ static func create(definition: TowerDefinition, position: Vector2,
 	entity.add_component(targeting)
 	targeting.range_px = definition.attack_range
 	targeting.priority = definition.targeting_priority
+	targeting.can_target_flying = definition.can_target_flying
 	targeting.candidate_provider = candidate_provider
 
 	var attack := AttackComponent.new()
 	entity.add_component(attack)
 	attack.configure_from_definition(definition)
+
+	var upgrades := UpgradeComponent.new()
+	entity.add_component(upgrades)
+	upgrades.configure(definition)
+
+	if definition.visual_scene != null:
+		var visual := definition.visual_scene.instantiate()
+		if visual is Node2D:
+			entity.add_child(visual)
+		else:
+			push_error("TowerFactory: visual_scene of '%s' has no Node2D root" % definition.id)
+			visual.free()
 
 	if parent != null:
 		parent.add_child(entity)

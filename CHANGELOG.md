@@ -2,6 +2,51 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [0.4.0] - 2026-08-26
+
+### Added — Milestone 4: First Playable (Phase 2 complete)
+
+- Bootable game: `scenes/game/battle.tscn` is now the main scene; the full
+  §44 loop is playable (start -> prepare -> waves -> build -> fight ->
+  upgrade/sell -> castle damage -> victory/defeat -> restart).
+- `BattleController` orchestrator wiring all systems; player intents only
+  (arm/build/cancel, select, upgrade, sell, pause, 1x/2x speed).
+- `BuildingSystem` (SPEC-0007 placement + SPEC-0010 purchases): path
+  clearance and tower-spacing validation, payment via wallet, refunds at
+  configurable ratio from `BalanceDefinition`.
+- `UpgradeComponent` + `TowerUpgradeDefinition` cumulative delta upgrades;
+  investment tracking feeds sell refunds.
+- `CastleSystem` converts enemy arrivals into castle damage announcements.
+- HUD (SPEC-0013): gold / wave+prep countdown / enemies alive / castle bar /
+  pause / speed / data-driven build bar from tower catalog / selection panel
+  with live stats, upgrade & sell buttons / victory-defeat overlay with
+  restart. UI sends intents, never mutates state.
+- Localization: `strings.csv` with translation keys for all UI text.
+- Content as real `.tres` resources: goblin/wisp/ogre definitions,
+  archer tower with 2-step upgrade path, balance resource, and a 5-wave
+  stage (`stage.001.test_range`) including a boss wave.
+- Prototype placeholder art (clearly labeled SVGs) + cosmetic visual scenes
+  referenced by definitions (ASSUMPTION A2).
+- Debug tooling start (§28): opt-in `EventProbe` autoload (GTD_EVENT_LOG=1)
+  printing lifecycle event counts; inert in production.
+
+### Validated
+
+- 109 unit/integration tests across 17 suites: ALL PASSING (exit 0),
+  including battle-scene binding resolution and content validation of all
+  shipped `.tres` files.
+- Live headless game run (5200 frames, GTD_EVENT_LOG=1): wave starts after
+  prep, 6 goblins spawn, all reach castle (6x castle_damaged), wave
+  completes, zero script errors.
+- validate_scripts: 39 scripts compile clean.
+
+### Fixed
+
+- WaveSystem was never parented under BattleController (masked in M3 tests
+  by external staging); battles now actually tick.
+- Cross-instance NodePath exports replaced with controller-driven binding
+  (ASSUMPTION A8).
+
 ## [0.3.0] - 2026-08-26
 
 ### Added — Milestone 3: Gameplay Foundation (Phase 2, in progress)

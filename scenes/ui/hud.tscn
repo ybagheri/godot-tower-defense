@@ -1,0 +1,144 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/hud_controller.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="TopLeft" type="VBoxContainer" parent="Root"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 320.0
+offset_bottom = 120.0
+
+[node name="GoldLabel" type="Label" parent="Root/TopLeft"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 24
+text = "Gold: 0"
+
+[node name="WaveLabel" type="Label" parent="Root/TopLeft"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 18
+text = "-"
+
+[node name="EnemiesLabel" type="Label" parent="Root/TopLeft"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 16
+text = "Enemies: 0"
+
+[node name="TopRight" type="HBoxContainer" parent="Root"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -420.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 48.0
+grow_horizontal = 0
+
+[node name="CastleBar" type="ProgressBar" parent="Root/TopRight"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 26)
+size_flags_vertical = 4
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="PauseButton" type="Button" parent="Root/TopRight"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(84, 34)
+text = "Pause"
+
+[node name="SpeedButton" type="Button" parent="Root/TopRight"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 34)
+text = "x1"
+
+[node name="BottomBar" type="MarginContainer" parent="Root"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -110.0
+offset_bottom = -8.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/BottomBar"]
+
+[node name="BuildBar" type="HBoxContainer" parent="Root/BottomBar/VBox"]
+unique_name_in_owner = true
+alignment = 1
+
+[node name="ToastLabel" type="Label" parent="Root/BottomBar/VBox"]
+unique_name_in_owner = true
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+text = ""
+
+[node name="SelectionPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -360.0
+offset_top = -300.0
+offset_right = -16.0
+offset_bottom = -120.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="VBox" type="VBoxContainer" parent="Root/SelectionPanel"]
+
+[node name="SelectionTitle" type="Label" parent="Root/SelectionPanel/VBox"]
+unique_name_in_owner = true
+theme_override_font_sizes/font_size = 20
+text = "Tower"
+
+[node name="SelectionStats" type="Label" parent="Root/SelectionPanel/VBox"]
+unique_name_in_owner = true
+text = "DMG {0} RNG {1} SPD {2}"
+
+[node name="Buttons" type="HBoxContainer" parent="Root/SelectionPanel/VBox"]
+
+[node name="UpgradeButton" type="Button" parent="Root/SelectionPanel/VBox/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 56)
+text = "Upgrade"
+
+[node name="SellButton" type="Button" parent="Root/SelectionPanel/VBox/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 56)
+text = "Sell"
+
+[node name="ResultOverlay" type="CenterContainer" parent="Root"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+[node name="Panel" type="PanelContainer" parent="Root/ResultOverlay"]
+
+[node name="VBox" type="VBoxContainer" parent="Root/ResultOverlay/Panel"]
+custom_minimum_size = Vector2(360, 180)
+
+[node name="ResultLabel" type="Label" parent="Root/ResultOverlay/Panel/VBox"]
+unique_name_in_owner = true
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 40
+text = "Victory"
+
+[node name="RestartButton" type="Button" parent="Root/ResultOverlay/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 60)
+size_flags_horizontal = 4
+text = "Restart"

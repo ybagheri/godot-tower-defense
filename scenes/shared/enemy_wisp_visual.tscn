@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/prototype/wisp.svg" id="1_tex"]
+
+[node name="EnemyWispVisual" type="Node2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_tex")

@@ -1,0 +1,36 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/battle_controller.gd" id="1_controller"]
+[ext_resource type="PackedScene" path="res://scenes/maps/test_range.tscn" id="2_map"]
+[ext_resource type="Script" path="res://scripts/utilities/world_tap_layer.gd" id="3_tap"]
+[ext_resource type="Script" path="res://scripts/utilities/selection_ring.gd" id="4_ring"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="5_hud"]
+[ext_resource type="Resource" path="res://resources/stages/stage_001_test_range.tres" id="6_stage"]
+[ext_resource type="Resource" path="res://resources/balance/balance_default.tres" id="7_balance"]
+[ext_resource type="Resource" path="res://resources/towers/tower_archer_basic.tres" id="8_archer"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_goblin_basic.tres" id="9_goblin"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_wisp_fast.tres" id="10_wisp"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_ogre_boss.tres" id="11_ogre"]
+
+[node name="Battle" type="Node2D"]
+script = ExtResource("1_controller")
+stage = ExtResource("6_stage")
+tower_catalog = Array[ExtResource("8_archer")]([ExtResource("8_archer")])
+enemy_catalog = Array[ExtResource("9_goblin")]([ExtResource("9_goblin"), ExtResource("10_wisp"), ExtResource("11_ogre")])
+balance = ExtResource("7_balance")
+entities_path = NodePath("Entities")
+castle_path = NodePath("Map/Castle")
+ring_path = NodePath("SelectionRing")
+
+[node name="Map" parent="." instance=ExtResource("2_map")]
+
+[node name="Entities" type="Node2D" parent="."]
+
+[node name="WorldTapLayer" type="Node2D" parent="."]
+script = ExtResource("3_tap")
+
+[node name="SelectionRing" type="Node2D" parent="."]
+z_index = 50
+script = ExtResource("4_ring")
+
+[node name="HUD" parent="." instance=ExtResource("5_hud")]

@@ -1,0 +1,21 @@
+key,en
+UI_GOLD_FORMAT,Gold: {0}
+UI_WAVE_FORMAT,Wave {0}/{1}
+UI_PREPARING_FORMAT,"Preparing {0}s - next wave {1}/{2}"
+UI_ENEMIES_FORMAT,"Enemies: {0}"
+UI_PAUSE,Pause
+UI_RESUME,Resume
+UI_UPGRADE,Upgrade
+UI_SELL,Sell
+UI_MAX_LEVEL,MAX LEVEL
+UI_LEVEL,Lv
+UI_CANNOT_UPGRADE,Cannot upgrade
+UI_SOLD_FORMAT,"Sold (+{0} gold)"
+UI_VICTORY,VICTORY
+UI_DEFEAT,DEFEAT
+UI_BOSS_WARNING,A boss approaches!
+ENEMY_GOBLIN,Goblin
+ENEMY_WISP,Wisp
+ENEMY_OGRE,Ogre Warlord
+TOWER_ARCHER,Archer Tower
+STAGE_TEST_RANGE,The Test Range
