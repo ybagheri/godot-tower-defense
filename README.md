@@ -63,78 +63,52 @@ The project is designed around long-term maintainability, modular systems and da
 
 # Repository Structure
 
-```
-
-# ساختار پوشه پروژه Godot Tower Defense
-
-```bash
+```text
 godot-tower-defense/
 ├── project.godot
 ├── icon.svg
-├── .gitignore
-├── .gitattributes
 ├── LICENSE
 ├── README.md
 │
-├── assets/                  # فایل‌های خام (Raw Assets)
-│   ├── sprites/
-│   │   ├── towers/
-│   │   ├── enemies/
-│   │   ├── projectiles/
-│   │   ├── environment/
-│   │   └── ui/
-│   ├── tilesets/
-│   ├── audio/
-│   │   ├── sfx/
-│   │   └── music/
-│   ├── vfx/
-│   └── fonts/
+├── addons/                    # Third-party editor plugins (kept minimal by policy)
+├── assets/                    # Raw assets
+│   ├── audio/  fonts/  icons/  materials/
+│   ├── music/  particles/  shaders/
+│   ├── sprites/               # prototype/ holds clearly-labeled placeholder art
+│   ├── textures/  ui/
 │
-├── src/                     # تمام منطق و صحنه‌های Godot
-│   ├── autoload/            # Global Singletons (Managers)
-│   │   ├── GameManager.gd
-│   │   ├── AudioManager.gd
-│   │   ├── SaveManager.gd
-│   │   └── EventBus.gd
-│   ├── components/          # کامپوننت‌های reusable
-│   │   ├── health/
-│   │   ├── attack/
-│   │   ├── movement/
-│   │   └── selection/
-│   ├── entities/
-│   │   ├── towers/
-│   │   ├── enemies/
-│   │   ├── projectiles/
-│   │   └── base/
-│   ├── systems/             # سیستم‌های اصلی بازی
-│   │   ├── wave/
-│   │   ├── economy/
-│   │   ├── building/
-│   │   ├── pathfinding/
-│   │   └── pooling/
-│   ├── ui/
-│   │   ├── screens/
-│   │   ├── hud/
-│   │   └── components/
-│   ├── levels/
-│   ├── resources/           # Data Resources (TowerData, EnemyData, ...)
-│   │   ├── towers/
-│   │   ├── enemies/
-│   │   ├── waves/
-│   │   └── upgrades/
-│   └── utils/
+├── docs/                      # Documentation is part of the source of truth
+│   ├── INDEX.md
+│   ├── 00_Project/            # Manifest, roadmap, glossary, style guide
+│   ├── 01_Architecture/       # Architecture overview
+│   ├── 04_Specifications/     # SPEC-0001..0015 implementation contracts
+│   └── 05_ADR/                # Architecture decision records
 │
-├── docs/                    # مستندات پروژه
-│   ├── 01-vision.md
-│   ├── 02-architecture.md
-│   ├── 03-game-design.md
-│   ├── 04-roadmap.md
-│   └── specifications/
+├── resources/                 # Data-driven gameplay definitions (.tres)
+│   ├── abilities/ enemies/ towers/ waves/
+│   └── stages/ balance/ localization/ settings/
 │
-├── addons/                  # افزونه‌های Godot
-├── tools/                   # ابزارهای کمکی (اختیاری)
-└── exports/                 # خروجی‌های تست (در .gitignore قرار می‌گیرد)
+├── scenes/                    # Godot scenes (presentation layer)
+│   ├── game/ ui/ towers/ enemies/
+│   └── projectiles/ effects/ maps/ shared/
+│
+├── scripts/                   # GDScript 2.0 (typed)
+│   ├── core/                  # Engine layer: entity/component/event/resource cores
+│   ├── managers/              # Global services (autoloads)
+│   ├── systems/               # Gameplay systems operating on components
+│   ├── entities/ components/ factories/
+│   ├── resources/ events/ gameplay/ ui/
+│   └── utilities/ debug/
+│
+├── tests/                     # Headless unit and integration tests
+│   ├── unit/ integration/
+│
+└── tools/                     # Development utilities
 ```
+
+Layering rule (`docs/01_Architecture/ARCHITECTURE_OVERVIEW.md`, ADR-0001):
+`scripts/core` is the engine layer and never references game content.
+Game systems depend on the engine; the engine never depends on the game.
 
 ---
 

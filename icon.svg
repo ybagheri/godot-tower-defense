@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Prototype placeholder icon: dark medieval shield emblem (original artwork) -->
+  <defs>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a4a52"/>
+      <stop offset="1" stop-color="#26262c"/>
+    </linearGradient>
+    <linearGradient id="trimGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9a227"/>
+      <stop offset="1" stop-color="#8a6d1d"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="14" fill="#1b1b1f"/>
+  <path d="M64 12 L106 28 V64 C106 92 88 108 64 118 C40 108 22 92 22 64 V28 Z"
+        fill="url(#shieldGrad)" stroke="url(#trimGrad)" stroke-width="5"/>
+  <path d="M64 34 L84 42 V64 C84 78 74 87 64 93 C54 87 44 78 44 64 V42 Z"
+        fill="none" stroke="#8a6d1d" stroke-width="2.5"/>
+  <circle cx="64" cy="62" r="11" fill="#7a1f1f" stroke="#c9a227" stroke-width="3"/>
+  <path d="M64 20 L98 33 V64 C98 86 83 100 64 109 L64 20 Z" fill="#000000" opacity="0.18"/>
+</svg>
