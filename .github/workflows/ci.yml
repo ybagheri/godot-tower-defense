@@ -91,12 +91,17 @@ jobs:
           echo "### Template install" >> "$GITHUB_STEP_SUMMARY"
           for attempt in 1 2 3; do
             echo "attempt $attempt" | tee -a summary_tpl.txt
-            if curl --fail --location --retry 3 --retry-delay 10 \
+            rm -f /tmp/templates.tpz
+            if curl --fail --location --retry 2 --retry-delay 10 \
                  -o /tmp/templates.tpz "$URL" 2>> summary_tpl.txt; then
               SIZE=$(stat -c%s /tmp/templates.tpz || echo 0)
               echo "downloaded bytes: $SIZE" | tee -a summary_tpl.txt
+              echo 'first 64 bytes:' | tee -a summary_tpl.txt
+              head -c 64 /tmp/templates.tpz | od -c | head -4 | tee -a summary_tpl.txt
               [ "$SIZE" -gt 100000000 ] && break
             fi
+            command -v wget >/dev/null && wget -q -O /tmp/templates.tpz "$URL" && \
+              [ "$(stat -c%s /tmp/templates.tpz)" -gt 100000000 ] && break
             sleep 15
           done
           cat summary_tpl.txt >> "$GITHUB_STEP_SUMMARY" || true
