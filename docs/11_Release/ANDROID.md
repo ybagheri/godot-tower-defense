@@ -22,11 +22,22 @@ verified via headless Godot.
 
 **APK builds are NOT VERIFIED in the development sandbox.** Missing, in order:
 
-1. Export templates for the exact editor version.
+1. Export templates - the official pack is a single **1.28 GB** tpz
+   (`content-length` verified 2026-08-26); sandbox disk cannot hold it plus
+   an Android SDK. Selective extraction of only `templates/android_*.apk`
+   (~90 MB) IS viable on constrained machines:
+   ```bash
+   unzip -j Godot_v4.7.2-stable_export_templates.tpz 'templates/android_*' \
+       -d ~/.local/share/godot/export_templates/4.7.2.stable/
+   ```
 2. Java JDK 17.
 3. Android SDK (platform + build-tools; Godot uses `apksigner`/`zipalign`
    even for non-gradle exports).
 4. A release keystore (never committed).
+
+Logic-side performance headroom is proven separately (see
+`docs/10_Testing/PERF_BASELINE.md`): gameplay logic stays under 0.1 ms per
+frame at 500 entities; device GPU profiling is the remaining unknown.
 
 ## One-time setup (maintainer machine)
 

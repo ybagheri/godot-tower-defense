@@ -61,6 +61,8 @@ func play_frost(position: Vector2, radius: float) -> void:
 
 func spawn_floating_text(position: Vector2, text_value: String,
 		color: Color) -> void:
+	if reduced_fx_enabled():
+		return
 	if _active_texts >= MAX_FLOATING_TEXTS:
 		return
 	if not PoolManager.has_pool(TEXT_POOL_KEY):
@@ -90,6 +92,18 @@ func spawn_burst(position: Vector2, color: Color, from_radius: float,
 ## Called by FloatingText when it returns to its pool.
 func notify_text_retired() -> void:
 	_active_texts = maxi(_active_texts - 1, 0)
+
+
+## Accessibility gate (§49): reduced-FX suppresses floating text entirely
+## and halves burst counts; read live so the pause toggle applies instantly.
+static func reduced_fx_enabled() -> bool:
+	var main_loop := Engine.get_main_loop()
+	if main_loop == null or not (main_loop is SceneTree):
+		return false
+	var save: Node = (main_loop as SceneTree).root.get_node_or_null("/root/SaveManager")
+	if save == null:
+		return false
+	return bool(save.get_section("settings").get("reduced_fx", false))
 
 
 ## Live floater count (debug/tests).

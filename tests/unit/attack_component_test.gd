@@ -89,7 +89,8 @@ func test_projectile_flight_and_pool_return() -> void:
 		guard += 1
 	assert_false(flight.is_in_flight(), "arrived within simulation budget")
 	assert_eq(975, target_health.current_health, "impact delivered damage")
-	assert_eq(1, PoolManager.idle_count(pool_key), "projectile returned to pool")
+	# Prewarm keeps 8 parked; our traveler rejoined them.
+	assert_eq(8, PoolManager.idle_count(pool_key), "projectile returned to pool")
 
 
 func test_attack_started_event_published() -> void:

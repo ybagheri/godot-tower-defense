@@ -68,7 +68,8 @@ func _execute_attack(entity: GameEntity, target: GameEntity) -> void:
 
 func _launch_projectile(entity: GameEntity, target: GameEntity, attack: Dictionary) -> void:
 	if not PoolManager.has_pool(PROJECTILE_POOL_KEY):
-		PoolManager.register_pool(PROJECTILE_POOL_KEY, _create_projectile, 0, 128)
+		# Prewarm avoids mid-battle instantiation spikes on Android.
+		PoolManager.register_pool(PROJECTILE_POOL_KEY, _create_projectile, 8, 128)
 	var projectile: Projectile = PoolManager.acquire(PROJECTILE_POOL_KEY)
 	if projectile == null:
 		push_error("AttackComponent: could not acquire projectile")

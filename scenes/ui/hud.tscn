@@ -240,6 +240,10 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
+[node name="ReducedFxCheck" type="CheckBox" parent="Root/PausePanel/Panel/VBox"]
+unique_name_in_owner = true
+text = "Reduced effects (battery / accessibility)"
+
 [node name="ResumeButton" type="Button" parent="Root/PausePanel/Panel/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 56)

@@ -8,8 +8,9 @@ config_version=5
 
 config/name="godot-tower-defense"
 config/description="A production-quality, data-driven Dark Medieval Fantasy Tower Defense game."
-config/version="0.4.0"
+config/version="0.8.0"
 run/main_scene="res://scenes/ui/main_menu.tscn"
+run/max_fps=60
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 

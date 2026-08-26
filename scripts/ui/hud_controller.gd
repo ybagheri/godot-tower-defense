@@ -26,6 +26,7 @@ extends CanvasLayer
 @onready var master_slider: HSlider = %MasterSlider
 @onready var music_slider: HSlider = %MusicSlider
 @onready var effects_slider: HSlider = %EffectsSlider
+@onready var reduced_fx_check: CheckBox = %ReducedFxCheck
 @onready var resume_button: Button = %ResumeButton
 @onready var boss_bar_panel: PanelContainer = %BossBarPanel
 @onready var boss_name_label: Label = %BossNameLabel
@@ -82,6 +83,7 @@ func bind_controller(new_controller: BattleController) -> void:
 	master_slider.drag_ended.connect(_on_volume_changed.bind("Master", master_slider))
 	music_slider.drag_ended.connect(_on_volume_changed.bind("Music", music_slider))
 	effects_slider.drag_ended.connect(_on_volume_changed.bind("Effects", effects_slider))
+	reduced_fx_check.toggled.connect(_on_reduced_fx_toggled)
 	_restore_audio_settings()
 
 
@@ -113,6 +115,16 @@ func _refresh_boss_bar() -> void:
 ## Resolves the EnemyDefinition backing a spawned entity via the registry id.
 func _definition_for_entity(entity: GameEntity) -> EnemyDefinition:
 	return ResourceManager.get_by_id(entity.entity_id) as EnemyDefinition
+
+
+func _on_reduced_fx_toggled(pressed: bool) -> void:
+	var save := _save_manager()
+	if save == null:
+		return
+	var settings: Dictionary = save.get_section("settings")
+	settings["reduced_fx"] = pressed
+	save.store_section("settings", settings)
+	save.save_game()
 
 
 func _on_menu_pressed() -> void:
@@ -352,9 +364,7 @@ func _restore_audio_settings() -> void:
 	master_slider.value = float(settings.get("master", 1.0))
 	music_slider.value = float(settings.get("music", 0.8))
 	effects_slider.value = float(settings.get("effects", 1.0))
-	_apply_volume("Master", master_slider.value)
-	_apply_volume("Music", music_slider.value)
-	_apply_volume("Effects", effects_slider.value)
+	reduced_fx_check.button_pressed = bool(settings.get("reduced_fx", false))
 
 
 func _on_volume_changed(changed: bool, bus_name: String, slider: HSlider) -> void:

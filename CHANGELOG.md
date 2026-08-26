@@ -2,6 +2,34 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [0.8.0] - 2026-08-26
+
+### Added — Milestone 9: Android Optimization groundwork
+
+- Performance stress harness (`tools/stress_battle.tscn`, parameterized)
+  and measured baseline (`docs/10_Testing/PERF_BASELINE.md`): gameplay
+  logic <0.1 ms/frame up to 500 enemies + 30 towers; ~6.9 ms headless
+  floor dominates. Micro-optimizations deferred until device profiles
+  demand them (measure-first discipline).
+- Reduced-FX accessibility setting (§49): pause-menu checkbox persisted in
+  SaveManager settings; gates floating text entirely and disables screen
+  shake live (battery + motion sensitivity).
+- Projectile pool prewarm (8) to avoid mid-battle instantiation spikes.
+- `run/max_fps=60` project setting for high-refresh-device battery.
+
+### Evidence & honesty notes
+
+- Android export templates ship as one 1.28 GB tpz (verified via HTTP
+  header) - too large for this sandbox; selective android-only extraction
+  documented in REL-0001 as the constrained-machine path. APK remains
+  NOT VERIFIED pending templates/JDK/SDK on real hardware.
+
+### Validation
+
+Tests 156 / 24 suites ALL PASSING (reduced-FX gating across VFX+shake,
+settings round-trip, prewarm-adjusted pool expectations). validate_scripts
+55 OK; stress harness runs clean at three load tiers.
+
 ## [0.7.0] - 2026-08-26
 
 ### Added — Milestone 8: Polish & Juice

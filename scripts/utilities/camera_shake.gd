@@ -24,6 +24,8 @@ func _exit_tree() -> void:
 
 
 func add_trauma(amount: float) -> void:
+	if BattleVfx.reduced_fx_enabled():
+		return
 	trauma = minf(trauma + amount, 1.0)
 
 
