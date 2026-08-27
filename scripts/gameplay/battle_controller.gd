@@ -199,13 +199,33 @@ func cancel_building() -> void:
 	build_mode_changed.emit(false)
 
 
-## Places the armed tower after BuildingSystem validation.
+## Places the armed tower after BuildingSystem validation. Failed attempts
+## surface as a localized HUD toast — silent rejections read on-device as
+## dead taps. Build mode STAYS armed so the player can retap elsewhere.
 func try_build_at(world_position: Vector2) -> void:
 	if not is_build_armed():
+		return
+	var verdict := building.check_placement(_armed_definition, world_position)
+	if not bool(verdict.get("ok", false)):
+		_notify_placement_failure(str(verdict.get("reason", "")))
 		return
 	var tower := building.try_build(_armed_definition, world_position)
 	if tower != null:
 		cancel_building()
+
+
+## Maps a BuildingSystem rejection reason to its localized message.
+const PLACEMENT_FAILURE_KEYS: Dictionary = {
+	"invalid_definition": "UI_UNKNOWN_TOWER",
+	"insufficient_gold": "UI_NOT_ENOUGH_GOLD",
+	"on_path": "UI_ON_PATH_BLOCKED",
+	"too_close_to_tower": "UI_TOWER_TOO_CLOSE",
+}
+
+
+func _notify_placement_failure(reason: String) -> void:
+	EventBus.publish(GameEvents.SHOW_NOTIFICATION,
+			{"message": tr(PLACEMENT_FAILURE_KEYS.get(reason, "UI_CANNOT_BUILD_HERE"))})
 
 
 func select_tower(tower: GameEntity) -> void:

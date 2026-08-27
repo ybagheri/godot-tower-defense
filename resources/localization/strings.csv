@@ -31,3 +31,8 @@ CAMPAIGN_NORTHERN_MARCH,The Northern March
 UI_LOCKED,Locked
 UI_MENU,Main Menu
 UI_BOSS,BOSS
+UI_NOT_ENOUGH_GOLD,Not enough gold
+UI_ON_PATH_BLOCKED,Cannot build on the enemy path
+UI_TOWER_TOO_CLOSE,Too close to another tower
+UI_CANNOT_BUILD_HERE,Cannot build here
+UI_UNKNOWN_TOWER,Unknown tower
