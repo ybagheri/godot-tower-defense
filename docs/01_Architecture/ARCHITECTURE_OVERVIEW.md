@@ -160,29 +160,18 @@ The project uses Godot features instead of recreating them.
 
 Reusable gameplay framework.
 
-Location:
+Location (authoritative layout per ADR-0002):
 
 ```
-engine/
+scripts/core        entity/component/resource primitives
+scripts/managers    autoload services (EventBus, ResourceManager,
+                    PoolManager, AudioManager, SaveManager, SceneManager)
+scripts/events      shared event-name vocabulary (GameEvents)
 ```
 
-Contains:
-
-```
-core/
-
-entity/
-
-components/
-
-systems/
-
-resources/
-
-services/
-
-utilities/
-```
+Engine-side supporting modules also live under `scripts/`
+(components/, systems/, factories/, resources/) - ADR-0002 carries the
+binding layer rules for each.
 
 ---
 
