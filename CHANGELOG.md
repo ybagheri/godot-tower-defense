@@ -27,7 +27,9 @@ All notable changes to the **godot-tower-defense** project are documented here.
   telemetry (`::notice` inputs, `A<n>_EXP[k]` engine-log lines) so red
   runs stay diagnosable without authenticated artifact access. Inputs
   themselves were verified end-to-end by an identical local reproduction
-  producing a signed debug APK.
+  producing a signed debug APK. Proven green the same hour (CI run #16):
+  signed APK exported on attempt #1 with the warm import cache and
+  uploaded as artifact `godottd-debug-apk` (~28 MB).
 
 ## [0.8.0] - 2026-08-26
 

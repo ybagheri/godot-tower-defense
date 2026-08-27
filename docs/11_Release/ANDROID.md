@@ -73,12 +73,15 @@ successful run → artifact **godottd-debug-apk**.
   `.github/workflows/ci.yml`: a persistent `.godot` import cache (collapses
   the flaky cold-scan window on warm runs) and a 3-attempt export loop
   with `--verbose` retries, per-attempt summaries, and per-attempt logs.
-- ⏳ Remaining unknown: whether these mitigations green the runner-side
-  export (non-Gradle path: PCK into template APK + apksigner signing).
-  Diagnostics are fully public now: each exporter input is emitted as a
-  job annotation (`::notice`), and failing attempts stream their engine
-  log lines as `A<n>_EXP[k]` error annotations. On-device touch/install
-  testing remains the final gate.
+- ✅ **Pipeline PROVEN green (2026-08-27, run #16):** the hardened
+  pipeline signed and uploaded a debug APK on export attempt #1 (warm
+  `.godot` cache) as artifact `godottd-debug-apk` (~28 MB), with every
+  input matching the local reproduction exactly (Temurin JDK 17.0.20,
+  SDK `/usr/local/lib/android/sdk`, build-tools 34.0.0 incl. apksigner,
+  dotted template dir `4.7.2.stable`, editor settings
+  `editor_settings-4.7.tres`). The silent mid-scan runner kills stopped
+  once the import cache removed the cold-scan window. On-device
+  touch/install testing remains the final human gate.
 
 Release-signed builds additionally require keystore secrets via GitHub
 *Settings → Secrets*, wired into a release job — intentionally not
