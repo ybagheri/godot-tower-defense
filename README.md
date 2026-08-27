@@ -6,13 +6,18 @@
 
 ## Project Status
 
-🚧 Active Development
+🚧 Active Development — **Phase 3: Vertical Slice (IN PROGRESS)**
 
-Current Phase:
+| Phase | State |
+|-------|-------|
+| 0 — Foundation | ✅ Complete |
+| 1 — Engine Foundation | ✅ Complete |
+| 2 — Gameplay Prototype | ✅ Complete |
+| **3 — Vertical Slice** | 🚧 **In progress** |
 
-- Vertical Slice playable (Phase 3)
-- Core framework complete (Phase 1)
-- Gameplay prototype complete (Phase 2)
+Evidence-based snapshot: `docs/00_Project/PROJECT_STATUS.md`.
+Phase authority: `docs/00_Project/PROJECT_ROADMAP.md`
+(synchronized during the 2026-08-27 repository audit).
 
 ---
 
@@ -65,46 +70,48 @@ The project is designed around long-term maintainability, modular systems and da
 
 ```text
 godot-tower-defense/
-├── project.godot
-├── icon.svg
-├── LICENSE
-├── README.md
+├── project.godot            # version 0.8.0, GL Compatibility renderer
+├── icon.svg  LICENSE  README.md  CHANGELOG.md
 │
-├── addons/                    # Third-party editor plugins (kept minimal by policy)
-├── assets/                    # Raw assets
-│   ├── audio/  fonts/  icons/  materials/
-│   ├── music/  particles/  shaders/
-│   ├── sprites/               # prototype/ holds clearly-labeled placeholder art
-│   ├── textures/  ui/
+├── assets/                  # raw assets (audio/fonts/icons/music/particles/
+│   │                        shaders/sprites/textures/ui)
+│   └── sprites/             # SVG art incl. policy-labeled prototype set
 │
-├── docs/                      # Documentation is part of the source of truth
+├── docs/                    # documentation = source of truth (see docs/INDEX.md)
 │   ├── INDEX.md
-│   ├── 00_Project/            # Manifest, roadmap, glossary, style guide
-│   ├── 01_Architecture/       # Architecture overview
-│   ├── 04_Specifications/     # SPEC-0001..0015 implementation contracts
-│   └── 05_ADR/                # Architecture decision records
+│   ├── 00_Project/          # manifest, roadmap, status report, spec matrix
+│   ├── 01_Architecture/     # ARCH-0001 layering & boundaries
+│   ├── 04_Specifications/   # SPEC-0001..0015 implementation contracts
+│   ├── 05_ADR/              # architecture decision records
+│   ├── 10_Game_Design/      # assumptions log + design gap register
+│   ├── 10_Testing/          # performance records
+│   └── 11_Release/          # REL-0001 Android build guide
 │
-├── resources/                 # Data-driven gameplay definitions (.tres)
-│   ├── abilities/ enemies/ towers/ waves/
-│   └── stages/ balance/ localization/ settings/
+├── resources/               # data-driven gameplay definitions (.tres)
+│   ├── abilities/ enemies/ towers/ stages/ campaigns/
+│   ├── balance/ audio/ ui/ localization/
+│   └── waves/ settings/     # reserved; wave data is stage-inline today
 │
-├── scenes/                    # Godot scenes (presentation layer)
-│   ├── game/ ui/ towers/ enemies/
-│   └── projectiles/ effects/ maps/ shared/
+├── scenes/                  # presentation layer
+│   ├── game/                # battle.tscn
+│   ├── maps/ shared/        # test_range, twin_roads; castle/enemy/tower visuals
+│   └── ui/                  # main menu, HUD
 │
-├── scripts/                   # GDScript 2.0 (typed)
-│   ├── core/                  # Engine layer: entity/component/event/resource cores
-│   ├── managers/              # Global services (autoloads)
-│   ├── systems/               # Gameplay systems operating on components
-│   ├── entities/ components/ factories/
-│   ├── resources/ events/ gameplay/ ui/
-│   └── utilities/ debug/
+├── scripts/                 # typed GDScript 2.0
+│   ├── core/                # ENGINE layer: entity/component/resource cores
+│   ├── managers/            # global services (autoloads)
+│   ├── components/ factories/ systems/ resources/ events/
+│   ├── gameplay/ utilities/ ui/ debug/
 │
-├── tests/                     # Headless unit and integration tests
-│   ├── unit/ integration/
-│
-└── tools/                     # Development utilities
+├── tests/                   # headless harness; unit/ populated,
+│                            # integration/ reserved
+└── tools/                   # dev utilities (validators, stress harness, sfx gen)
 ```
+
+Layering rule (`docs/01_Architecture/ARCHITECTURE_OVERVIEW.md`, ADR-0001):
+`scripts/core` is the engine layer and never references game content.
+Game systems depend on the engine; the engine never depends on the game.
+
 
 Layering rule (`docs/01_Architecture/ARCHITECTURE_OVERVIEW.md`, ADR-0001):
 `scripts/core` is the engine layer and never references game content.
@@ -255,15 +262,11 @@ Every important feature requires:
 
 # Current Phase
 
-Phase 0
+**Phase 3 — Vertical Slice (IN PROGRESS)**
 
-Project Foundation
-
-Current work:
-
-- Repository
-- Documentation
-- Engine Architecture
+Phases 0–2 complete. Single authoritative source:
+`docs/00_Project/PROJECT_ROADMAP.md`; live details:
+`docs/00_Project/PROJECT_STATUS.md`.
 
 ---
 

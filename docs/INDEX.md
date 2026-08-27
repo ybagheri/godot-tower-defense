@@ -1,10 +1,11 @@
 ---
 Document ID: DOC-0000
 Title: Documentation Index
-Version: 1.0.0
+Version: 1.1.0
 Status: Approved
 Owner: Project Architecture
-Last Updated: 2026-07-23
+Created: 2026-07-23
+Last Updated: 2026-08-27
 ---
 
 # Documentation Index
@@ -12,6 +13,13 @@ Last Updated: 2026-07-23
 This document is the entry point for the entire documentation of the **godot-tower-defense** project.
 
 Every document inside this repository belongs to one of the categories listed below.
+
+> **v1.1.0 (audit sync, 2026-08-27):** this revision synchronizes the index
+> with the ACTUAL repository contents. The repository structure is
+> authoritative for what exists; categories or files that are planned but do
+> not exist yet are explicitly marked **PLANNED** instead of being listed as
+> if present. Folder-numbering collisions between existing directories are
+> recorded as known debt (see below) rather than silently renamed.
 
 ---
 
@@ -30,479 +38,204 @@ Every important system must have:
 
 ---
 
-# Directory Structure
+# Directory Structure (actual)
 
 ```
 docs/
-
-├── INDEX.md
-│
-├── 00_Project/
-│
-├── 01_Architecture/
-│
-├── 02_GDD/
-│
-├── 03_GameBible/
-│
-├── 04_Specifications/
-│
-├── 05_API/
-│
-├── 06_Balance/
-│
-├── 07_ArtBible/
-│
-├── 08_AudioBible/
-│
-├── 09_UIBible/
-│
-├── 10_Testing/
-│
-├── 11_Release/
-│
-├── 12_ADR/
-│
-└── 13_RFC/
+├── INDEX.md                 # this file (DOC-0000)
+├── 00_Project/              # project-level documents
+├── 01_Architecture/         # high-level architecture
+├── 02_GDD/                  # game design document        [EMPTY — PLANNED]
+├── 04_Specifications/       # SPEC-0001..0015 contracts
+├── 05_ADR/                  # architecture decision records
+├── 06_Art/                  # art bible                   [EMPTY — PLANNED]
+├── 07_Lore/                 # world lore                  [EMPTY — PLANNED]
+├── 08_Audio/                # audio bible                 [EMPTY — PLANNED]
+├── 09_Level_Design/         # level design                [EMPTY — PLANNED]
+├── 10_Game_Design/          # design assumptions & gaps
+├── 10_Testing/              # testing documentation
+└── 11_Release/              # release process
 ```
+
+There is no `03_GameBible/`, `05_API/`, `06_Balance/`, `07_ArtBible/`,
+`08_AudioBible/`, `09_UIBible/`, `12_ADR/` or `13_RFC/`. The v1.0.0 index
+listed aspirational names that were never created. ADRs live in `05_ADR/`;
+a home for RFCs stays PLANNED until the first RFC exists.
+
+**Known debt:** two folder pairs share a number prefix (`10_Game_Design` vs
+`10_Testing`, `11_AI` vs `11_Release`) — naming-collision leftovers of the
+growth history. Existing cross-references (CHANGELOG, REL-0001, assumptions)
+would break on rename, so renumbering requires a dedicated ADR decision,
+never an unprompted rename.
 
 ---
 
-# 00_Project
+# 00_Project — Project level documentation
 
-Project level documentation.
-
-Files
+Files (actual):
 
 ```
-PROJECT_MANIFEST.md
-
-PROJECT_ROADMAP.md
-
-CHANGELOG.md
-
-GLOSSARY.md
-
-STYLE_GUIDE.md
+PROJECT_MANIFEST.md             # PROJ-0001 vision & rules
+PROJECT_ROADMAP.md              # PROJ-0002 phases — authoritative statuses
+PROJECT_STATUS.md               # PROJ-0005 evidence-based status snapshot
+SPEC_IMPLEMENTATION_MATRIX.md   # PROJ-0006 spec vs implementation map
+GLOSSARY.md                     # PROJ-0003 terms
+STYLE_GUIDE.md                  # PROJ-0004 conventions
 ```
 
-Purpose
+Note: the project CHANGELOG lives at the **repository root**
+(`CHANGELOG.md`), not inside docs/.
 
-Project vision and long-term direction.
+Purpose: project vision, phases and long-term direction.
 
 ---
 
 # 01_Architecture
 
-High-level engine architecture.
-
-Files
+Files (actual):
 
 ```
-ARCHITECTURE_OVERVIEW.md
-
-ENGINE_LAYER.md
-
-ENTITY_MODEL.md
-
-RESOURCE_MODEL.md
-
-EVENT_SYSTEM.md
-
-SAVE_SYSTEM.md
+ARCHITECTURE_OVERVIEW.md   # ARCH-0001 layers, boundaries, layering rule
 ```
 
-Purpose
+PLANNED: ENGINE_LAYER / ENTITY_MODEL / RESOURCE_MODEL / EVENT_SYSTEM /
+SAVE_SYSTEM deep-dives — create on demand, not speculatively.
 
-Describe how the engine is built.
+Purpose: describe how the engine is built. Layering rule:
+GAME → ENGINE → GODOT; the engine must never depend on game-specific
+content.
 
 ---
 
-# 02_GDD
+# 02_GDD — Game Design Document            [EMPTY — PLANNED]
 
-Game Design Document.
-
-Files
-
-```
-GAME_VISION.md
-
-GAMEPLAY_LOOP.md
-
-TOWERS.md
-
-ENEMIES.md
-
-HEROES.md
-
-SPELLS.md
-
-STAGES.md
-
-CAMPAIGN.md
-```
-
-Purpose
-
-Describe gameplay.
-
----
-
-# 03_GameBible
-
-Permanent design rules.
-
-Examples
-
-```
-DESIGN_PRINCIPLES.md
-
-GAME_RULES.md
-
-NAMING.md
-
-ECONOMY_RULES.md
-
-PROGRESSION_RULES.md
-
-```
-
-Purpose
-
-Defines rules that should rarely change.
+Directory reserved; PLANNED files: GAME_VISION, GAMEPLAY_LOOP, TOWERS,
+ENEMIES, SPELLS, STAGES, CAMPAIGN. Until authored, design decisions are
+tracked in `10_Game_Design/ASSUMPTIONS.md` and `DESIGN_GAPS.md`.
 
 ---
 
 # 04_Specifications
 
-The most important documentation.
-
-Every gameplay system has one specification.
-
-Examples
+Files (actual):
 
 ```
-SPEC-0001-RESOURCE-SYSTEM.md
-
-SPEC-0002-ENTITY-SYSTEM.md
-
-SPEC-0003-COMPONENT-SYSTEM.md
-
-SPEC-0004-EVENT-BUS.md
-
-SPEC-0005-WAVE-SYSTEM.md
-
-SPEC-0006-COMBAT.md
-
-SPEC-0007-TOWER-SYSTEM.md
-
-SPEC-0008-HERO-SYSTEM.md
-
-SPEC-0009-AI.md
-
-SPEC-0010-SAVE.md
+SPEC-0001 RESOURCE    SPEC-0006 COMBAT      SPEC-0011 PROGRESSION
+SPEC-0002 ENTITY      SPEC-0007 TOWER       SPEC-0012 SAVE
+SPEC-0003 COMPONENT   SPEC-0008 ENEMY       SPEC-0013 UI
+SPEC-0004 EVENT       SPEC-0009 PATH        SPEC-0014 AUDIO
+SPEC-0005 WAVE        SPEC-0010 ECONOMY     SPEC-0015 ABILITY
 ```
 
-Purpose
+All Approved. Implementation state per contract: see
+`00_Project/SPEC_IMPLEMENTATION_MATRIX.md`.
 
-Implementation contracts.
+Purpose: implementation contracts. No production code without one.
 
 ---
 
-# 05_API
+# 05_ADR
 
-Public interfaces.
-
-Examples
+Files (actual):
 
 ```
-RESOURCE_API.md
-
-EVENT_API.md
-
-SAVE_API.md
+ADR-0001-REPOSITORY-STRUCTURE.md
 ```
 
-Purpose
-
-Stable interfaces between systems.
+ADRs are immutable once approved; superseding requires a new ADR.
 
 ---
 
-# 06_Balance
+# 06_Art                                   [EMPTY — PLANNED]
+# 07_Lore                                  [EMPTY — PLANNED]
+# 08_Audio                                 [EMPTY — PLANNED]
+# 09_Level_Design                          [EMPTY — PLANNED]
 
-Gameplay balancing.
-
-Examples
-
-```
-ENEMY_STATS.md
-
-TOWER_STATS.md
-
-HERO_STATS.md
-
-ECONOMY.md
-
-XP_CURVES.md
-```
-
-Purpose
-
-Gameplay numbers.
+Reserved categories; create documents when content work begins. Current art
+state: prototype SVGs under assets/sprites (policy-labeled placeholders).
+Current audio state: synthesized SFX from tools/generate_sfx.gd.
 
 ---
 
-# 07_ArtBible
+# 10_Game_Design
 
-Visual identity.
-
-Examples
+Files (actual):
 
 ```
-STYLE.md
-
-CHARACTERS.md
-
-ENVIRONMENTS.md
-
-ANIMATION.md
-
-VFX.md
-
-ICONS.md
+ASSUMPTIONS.md   # A1-A11 pre-GDD assumptions with revisit triggers
+DESIGN_GAPS.md   # G-01.. unresolved decisions, prioritized P0/P1/P2
 ```
 
-Purpose
-
-Visual consistency.
-
----
-
-# 08_AudioBible
-
-Music and sound.
-
-Examples
-
-```
-MUSIC.md
-
-SFX.md
-
-VOICE.md
-```
-
----
-
-# 09_UIBible
-
-User Interface.
-
-Examples
-
-```
-HUD.md
-
-MAIN_MENU.md
-
-SHOP.md
-
-SETTINGS.md
-
-COLORS.md
-```
+Purpose: keep inferred design honest until real design documents land.
 
 ---
 
 # 10_Testing
 
-Testing documentation.
-
-Examples
+Files (actual):
 
 ```
-TEST_PLAN.md
-
-UNIT_TESTS.md
-
-PERFORMANCE.md
-
-BUG_PROCESS.md
+PERF_BASELINE.md   # PERF-0001 initial logic baseline (2026-08-26)
+PERFORMANCE.md     # PERF-0002 measured performance record
 ```
+
+PLANNED: TEST_PLAN / UNIT_TESTS catalog / BUG_PROCESS.
+
+Harness reality: headless runner `tests/test_runner.tscn` discovers
+`tests/unit/*_test.gd`; `tests/integration/` exists but is EMPTY today.
 
 ---
 
 # 11_Release
 
-Release process.
-
-Examples
+Files (actual):
 
 ```
-ANDROID.md
-
-GOOGLE_PLAY.md
-
-VERSIONING.md
-
-POST_RELEASE.md
+ANDROID.md   # REL-0001 Android build guide, CI status, checklist
 ```
+
+PLANNED: GOOGLE_PLAY / VERSIONING / POST_RELEASE when store work starts.
 
 ---
 
-# 12_ADR
+# 11_AI                                    [EMPTY — PLANNED]
 
-Architecture Decision Records.
-
-Naming
-
-```
-ADR-0001-....
-
-ADR-0002-....
-
-ADR-0003-....
-```
-
-Purpose
-
-Record architectural decisions.
-
-ADR documents are immutable.
-
----
-
-# 13_RFC
-
-Request For Comments.
-
-Naming
-
-```
-RFC-0001-....
-
-RFC-0002-....
-
-RFC-0003-....
-```
-
-Purpose
-
-Discuss future changes before implementation.
-
-RFCs may become ADRs.
+Placeholder folder from early setup; intended AI-development context notes.
+Treat as unused until populated.
 
 ---
 
 # Document Lifecycle
 
-```
-Draft
-
-↓
-
-Review
-
-↓
-
-Approved
-
-↓
-
-Implemented
-
-↓
-
-Archived
-```
+Draft → Review → Approved → Implemented → Archived
 
 ---
 
 # Document Header Standard
 
-Every document begins with:
-
-```yaml
----
-Document ID:
-Title:
-Version:
-Status:
-Owner:
-Created:
-Last Updated:
-Dependencies:
-Related ADR:
-Related RFC:
----
-```
+Every document begins with a YAML front-matter block carrying at minimum:
+Document ID, Title, Version, Status, Owner, Created, Last Updated.
 
 ---
 
 # Naming Rules
 
-Folders
-
-PascalCase
-
-Examples
-
-```
-GameBible
-
-Specifications
-
-Architecture
-```
-
-Files
-
-UPPER_SNAKE_CASE is **not** used.
-
-Use:
-
-```
-PROJECT_MANIFEST.md
-
-ENGINE_LAYER.md
-
-SPEC-0001-RESOURCE-SYSTEM.md
-```
+Folders use numbered prefixes per the structure above. Document IDs follow
+the `XXX-NNNN` registry (DOC, PROJ, ARCH, SPEC, ADR, REL, PERF) zero-padded;
+next free PROJ id: PROJ-0007.
 
 ---
 
 # Versioning
 
-Documentation follows Semantic Versioning.
-
-Examples
-
-```
-1.0.0
-
-1.1.0
-
-2.0.0
-```
+Documentation follows Semantic Versioning (`1.0.0`, `1.1.0`, …).
 
 ---
 
 # Approval Process
 
-Every major document must be:
-
-Draft
-
-↓
-
-Reviewed
-
-↓
-
-Approved
-
-before implementation begins.
+Every major document must pass Draft → Reviewed → Approved before
+implementation begins.
 
 ---
 
@@ -516,4 +249,4 @@ If implementation and documentation differ,
 
 ---
 
-# End of Document---
+# End of Document

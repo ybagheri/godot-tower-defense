@@ -5,7 +5,7 @@ Version: 1.0.0
 Status: Approved
 Owner: Project Architecture
 Created: 2026-07-23
-Last Updated: 2026-07-23
+Last Updated: 2026-08-27
 Dependencies:
   - PROJ-0001 Project Manifest
   - ARCH-0001 Architecture Overview
@@ -75,8 +75,11 @@ Release
 Status:
 
 ```
-IN PROGRESS
+COMPLETE
 ```
+
+(Closed by audit 2026-08-27: repository layout, full documentation system,
+ADR-0001 and SPEC-0001..0015 all exist and are approved; CI enforces them.)
 
 ## Goal
 
@@ -479,14 +482,17 @@ Examples:
 Current project phase:
 
 ```
-Phase 0 — Foundation
+Phase 3 — Vertical Slice (IN PROGRESS)
 ```
 
 Next milestone:
 
 ```
-Complete Architecture Documentation
+M10/M11 — Android device verification, then VS content completion
 ```
+
+Live evidence snapshot: `PROJECT_STATUS.md` (PROJ-0005).
+Design decisions outstanding: `../10_Game_Design/DESIGN_GAPS.md`.
 
 ---
 

@@ -4,6 +4,38 @@ All notable changes to the **godot-tower-defense** project are documented here.
 
 ## [Unreleased]
 
+### Added — repository audit (2026-08-27)
+
+- `docs/00_Project/PROJECT_STATUS.md` (PROJ-0005): evidence-based status
+  snapshot — one authoritative current phase, completed-systems matrix,
+  technical-debt register, Definition of Done for the next milestone.
+- `docs/00_Project/SPEC_IMPLEMENTATION_MATRIX.md` (PROJ-0006): per-contract
+  IMPLEMENTED/PARTIAL verdicts backed by named tests and inspected code.
+- `docs/10_Game_Design/DESIGN_GAPS.md`: prioritized unresolved design
+  decisions — P0 (damage model ratification, tower/enemy rosters,
+  heroes-in-VS), P1 (progression curves, stage targets, castle behavior,
+  branding application), P2.
+- `docs/10_Testing/PERFORMANCE.md` (PERF-0002): fresh measured stress data;
+  physical-device verification explicitly marked NOT VERIFIED.
+
+### Changed — repository audit (2026-08-27)
+
+- `docs/INDEX.md` v1.1.0 rewritten against the ACTUAL docs tree
+  (aspirational v1.0 categories marked PLANNED; folder-number collisions
+  recorded as known debt instead of renamed).
+- README and PROJECT_ROADMAP contradicted each other and themselves about
+  the current phase (Phase 3 vs Phase 0): **Phase 3 Vertical Slice IN
+  PROGRESS** is now the single authority everywhere; roadmap Phase 0 closed
+  as COMPLETE, Current Focus section updated.
+- README repository-structure block corrected against reality (no `addons/`,
+  no `scripts/entities/`; actual scenes/resources/docs subdirectories).
+- Android export presets carried stale `version/name` 0.6.0 while
+  project.godot ships 0.8.0 — both presets aligned.
+- Stress harness (`tools/stress_battle.gd`) UNCAPS the frame rate by
+  default: shipped `run/max_fps=60` clamped every headless frame to
+  ~16.67 ms, masking sub-frame logic costs since 0.8.0. Optional
+  `max_fps=<n>` restores pacing semantics; the CI smoke gate is unaffected.
+
 ### Fixed
 
 - Gameplay/Android: enemies spawn on the path's first waypoint.
