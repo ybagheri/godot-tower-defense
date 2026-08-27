@@ -1,7 +1,8 @@
 ## Records stage results into persistent progression (SPEC-0011/0012).
 ##
-## Stars follow the SPEC-0011 criteria based on castle health remaining:
-## >=70% three stars, >=35% two stars, otherwise one.
+## Stars follow the SPEC-0011 criteria based on castle health remaining,
+## with thresholds supplied by BalanceDefinition (data-driven since gap
+## G-06; shipped defaults preserve the historical 70%/35% behavior).
 class_name ProgressionTracker
 extends Node
 
@@ -9,10 +10,13 @@ extends Node
 var save_manager: Node = null
 ## Callable returning the castle health ratio (0..1) at completion time.
 var castle_ratio_provider: Callable = Callable()
+## Threshold provider; null falls back to fresh BalanceDefinition defaults.
+var balance: BalanceDefinition = null
 
 
-func setup(manager: SaveManager) -> void:
+func setup(manager: SaveManager, balance_config: BalanceDefinition = null) -> void:
 	save_manager = manager
+	balance = balance_config
 
 
 func _ready() -> void:
@@ -23,10 +27,18 @@ func _exit_tree() -> void:
 	EventBus.unsubscribe(GameEvents.STAGE_COMPLETED, _on_stage_completed)
 
 
-static func stars_for_health_ratio(ratio: float) -> int:
-	if ratio >= 0.7:
+func _thresholds() -> BalanceDefinition:
+	if balance != null and is_instance_valid(balance):
+		return balance
+	return BalanceDefinition.new()
+
+
+## Stars earned for the given castle-health fraction (inclusive bounds).
+func stars_for_health_ratio(ratio: float) -> int:
+	var config := _thresholds()
+	if ratio >= config.three_star_health_ratio:
 		return 3
-	if ratio >= 0.35:
+	if ratio >= config.two_star_health_ratio:
 		return 2
 	return 1
 

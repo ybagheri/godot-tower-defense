@@ -89,7 +89,7 @@ func _ready() -> void:
 	var save_manager := get_node_or_null("/root/SaveManager")
 	if save_manager != null:
 		var progression := ProgressionTracker.new()
-		progression.setup(save_manager)
+		progression.setup(save_manager, balance)
 		progression.castle_ratio_provider = func() -> float:
 			return float(castle_current_health()) / float(maxi(castle_max_health(), 1))
 		add_child(progression)

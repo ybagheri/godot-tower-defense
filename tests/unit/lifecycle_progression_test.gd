@@ -60,12 +60,42 @@ func test_goal_arrival_queues_removal() -> void:
 	enemy.free()
 
 
-func test_stars_thresholds() -> void:
-	assert_eq(3, ProgressionScript.stars_for_health_ratio(0.9), "healthy castle")
-	assert_eq(3, ProgressionScript.stars_for_health_ratio(0.7), "threshold inclusive")
-	assert_eq(2, ProgressionScript.stars_for_health_ratio(0.5), "damaged castle")
-	assert_eq(2, ProgressionScript.stars_for_health_ratio(0.35), "threshold inclusive")
-	assert_eq(1, ProgressionScript.stars_for_health_ratio(0.1), "barely survived")
+func test_stars_thresholds_default_balance() -> void:
+	var tracker: Node = ProgressionScript.new()
+	tracker.setup(save_manager())
+	assert_eq(3, tracker.stars_for_health_ratio(0.9), "healthy castle")
+	assert_eq(3, tracker.stars_for_health_ratio(0.7), "three-star bound inclusive")
+	assert_eq(2, tracker.stars_for_health_ratio(0.5), "damaged castle")
+	assert_eq(2, tracker.stars_for_health_ratio(0.35), "two-star bound inclusive")
+	assert_eq(1, tracker.stars_for_health_ratio(0.1), "barely survived")
+	tracker.free()
+
+
+func test_stars_thresholds_come_from_balance_data() -> void:
+	var config := BalanceDefinition.new()
+	config.three_star_health_ratio = 0.8
+	config.two_star_health_ratio = 0.5
+	var tracker: Node = ProgressionScript.new()
+	tracker.setup(save_manager(), config)
+	assert_eq(3, tracker.stars_for_health_ratio(0.85), "custom three-star band")
+	assert_eq(2, tracker.stars_for_health_ratio(0.55), "custom two-star band")
+	assert_eq(1, tracker.stars_for_health_ratio(0.49), "below custom two-star band")
+	tracker.free()
+
+
+func test_invalid_star_ordering_is_rejected_by_validation() -> void:
+	var config := BalanceDefinition.new()
+	config.id = "balance.test.inverted"
+	config.two_star_health_ratio = config.three_star_health_ratio
+	var report := config.validate()
+	assert_true(not report.errors.is_empty(), "inverted/flat thresholds rejected")
+	var fixed := BalanceDefinition.new()
+	fixed.id = "balance.test.valid"
+	fixed.two_star_health_ratio = 0.4
+	fixed.three_star_health_ratio = 0.6
+	var fixed_report := fixed.validate()
+	for message: String in fixed_report.errors:
+		assert_false("star ratio" in message, "no star-order error on valid config")
 
 
 func test_progression_records_best_result_and_persists() -> void:
