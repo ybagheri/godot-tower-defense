@@ -12,10 +12,17 @@ extends Node2D
 func _unhandled_input(event: InputEvent) -> void:
 	if controller == null:
 		return
-	var pressed := false
+	# React ONLY to ScreenTouch presses. Both emulation flags are enabled in
+	# project settings, so every desktop click arrives as a ScreenTouch too,
+	# and every real finger ALSO synthesizes a mouse event: listening to both
+	# would double-fire, while reading the mouse cache placed towers where the
+	# PREVIOUS pointer was — coordinates were always stale at touch time.
 	if event is InputEventScreenTouch and event.pressed:
-		pressed = true
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		pressed = true
-	if pressed:
-		controller.handle_world_tap(get_global_mouse_position())
+		controller.handle_world_tap(world_point_for(event.position))
+
+
+## Converts viewport coordinates taken FROM THE EVENT into battle-world
+## coordinates. get_global_mouse_position() lags behind a fresh touch until
+## the emulated mouse event is processed, mis-placing towers on Android.
+func world_point_for(screen_position: Vector2) -> Vector2:
+	return get_canvas_transform().affine_inverse() * screen_position
