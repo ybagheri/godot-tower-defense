@@ -6,6 +6,29 @@ All notable changes to the **godot-tower-defense** project are documented here.
 
 ### Fixed
 
+- Gameplay/Android: enemies spawn on the path's first waypoint.
+  `EnemyFactory.create` never positioned the entity, so every enemy
+  started at the battle container's origin `(0,0)` and walked diagonally
+  until intercepting `waypoints[1]` — on device this read as enemies
+  leaving the path between spawn and its first turn. Regression-tested
+  (exact spawn position + advance strictly along the first segment).
+- Input/Android: battlefield taps react ONLY to `InputEventScreenTouch`
+  presses with coordinates derived from `event.position` itself. The
+  previous handler accepted mouse events too (double-fire when both
+  emulation flags are on) and queried `get_global_mouse_position()`,
+  whose cache lags behind a fresh touch — towers were silently dropped
+  or placed where the PREVIOUS pointer had been, matching the device
+  report "towers selectable but cannot be placed".
+- UX feedback: rejected tower placements now surface as localized HUD
+  toasts via `SHOW_NOTIFICATION` (`invalid_definition` -> `UI_UNKNOWN_TOWER`,
+  `insufficient_gold` -> `UI_NOT_ENOUGH_GOLD`, `on_path` ->
+  `UI_ON_PATH_BLOCKED`, `too_close_to_tower` -> `UI_TOWER_TOO_CLOSE`,
+  plus generic `UI_CANNOT_BUILD_HERE`). Build mode stays armed so the
+  player can immediately retap elsewhere instead of hitting silent
+  dead taps.
+
+### Legacy (pre-device-testing CI work)
+
 - CI/Android: write editor settings under the filename Godot actually
   loads (`editor_settings-<major>.<minor>.tres`; the previous full-version
   name made Godot ignore the Java/SDK paths entirely), fail the export
