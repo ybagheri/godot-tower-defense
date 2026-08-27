@@ -2,6 +2,18 @@
 
 All notable changes to the **godot-tower-defense** project are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- CI/Android: write editor settings under the filename Godot actually
+  loads (`editor_settings-<major>.<minor>.tres`; the previous full-version
+  name made Godot ignore the Java/SDK paths entirely), fail the export
+  step loudly on non-zero exit or missing APK instead of failing silently
+  at artifact upload, remove a duplicated upload step, scope diagnostics
+  to `export_log.txt`, and clean up only `assets/android` after template
+  chunk extraction so game assets survive into the packaged PCK.
+
 ## [0.8.0] - 2026-08-26
 
 ### Added — Milestone 9: Android Optimization groundwork

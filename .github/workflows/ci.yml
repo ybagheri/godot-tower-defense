@@ -86,7 +86,9 @@ jobs:
           git checkout FETCH_HEAD -- assets/android
           cat assets/android/android_debug.apk.part*   > "$TPL_DIR/android_debug.apk"
           cat assets/android/android_release.apk.part* > "$TPL_DIR/android_release.apk"
-          rm -rf assets
+          # Strip ONLY the fetched chunk dir; a blanket "rm -rf assets"
+          # would also wipe game audio/fonts/icons from the packaged PCK.
+          rm -rf assets/android
           ls -la "$TPL_DIR" | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Set up JDK 17
@@ -114,14 +116,21 @@ jobs:
       - name: Configure Godot editor settings for Android
         run: |
           mkdir -p ~/.config/godot
-          cat > ~/.config/godot/editor_settings-${GODOT_VERSION}.tres <<EOF
+          # Godot loads ~/.config/godot/editor_settings-<major>.<minor>.tres
+          # (its binary format string is "editor_settings-%d.%d.tres").
+          # Including the patch/status suffix makes Godot IGNORE the file,
+          # so java/sdk paths would never reach the exporter.
+          ES_MM="$(~/godot-bin/godot --version | sed -E 's/^([0-9]+\.[0-9]+).*/\1/')"
+          ES_FILE="$HOME/.config/godot/editor_settings-${ES_MM}.tres"
+          cat > "$ES_FILE" <<EOF
           [gd_resource type="EditorSettings" format=3]
 
           [resource]
           export/android/java_sdk_path="$JAVA_HOME"
           export/android/android_sdk_path="${ANDROID_HOME}"
           EOF
-          cat ~/.config/godot/editor_settings-${GODOT_VERSION}.tres
+          echo "Wrote: $ES_FILE"
+          cat "$ES_FILE"
 
       - name: Export debug APK
         run: |
@@ -137,15 +146,19 @@ jobs:
             tail -60 export_log.txt
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+          # Fail the export step ITSELF (with the log in the summary)
+          # instead of silently letting a missing APK break the upload step.
+          if [ "$EXIT_CODE" -ne 0 ] || [ ! -s exports/godottd-debug.apk ]; then
+            echo "::error::Godot export failed (exit=$EXIT_CODE). Full log: artifact 'android-export-diagnostics'."
+            exit 1
+          fi
 
       - name: Upload diagnostics on any result
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: android-export-diagnostics
-          path: |
-            export_log.txt
-            exports/**
+          path: export_log.txt
           if-no-files-found: ignore
 
       - name: Diagnostics bundle
@@ -156,22 +169,15 @@ jobs:
             echo "== which java =="; which java || true
             echo "== ANDROID_HOME =="; echo "$ANDROID_HOME"; ls "$ANDROID_HOME" 2>/dev/null
             echo "== build-tools =="; ls "$ANDROID_HOME/build-tools" 2>/dev/null
-            echo "== editor settings =="; cat ~/.config/godot/editor_settings-${GODOT_VERSION}.tres 2>/dev/null
+            echo "== editor settings =="; ls -la ~/.config/godot/ 2>/dev/null; cat ~/.config/godot/editor_settings-*.tres 2>/dev/null
             echo "== templates =="; ls -la ~/.local/share/godot/export_templates/${GODOT_VERSION}/ 2>/dev/null
             echo "== keystore =="; ls -la ~/.android/ 2>/dev/null
             echo "== export log =="; cat export_log.txt 2>/dev/null
           } > diagnostics.txt
           cat diagnostics.txt >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload APK artifact
+      - name: Upload debug APK
         if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: godottd-debug-apk
-          path: exports/godottd-debug.apk
-          if-no-files-found: error
-
-      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: godottd-debug-apk

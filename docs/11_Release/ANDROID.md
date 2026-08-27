@@ -1,11 +1,11 @@
 ---
 Document ID: REL-0001
 Title: Android Build Guide
-Version: 1.0.0
+Version: 1.0.1
 Status: Approved
 Owner: Release Engineering
 Created: 2026-08-26
-Last Updated: 2026-08-26
+Last Updated: 2026-08-27
 Dependencies:
   - PROJ-0002 Project Roadmap
 Related ADR: None
@@ -30,22 +30,34 @@ and Android SDK this sandbox lacks):
 **Fetch your APK:** repository on GitHub → *Actions* → latest
 successful run → artifact **godottd-debug-apk**.
 
-### Current CI state (2026-08-26)
+### Current CI state (2026-08-27)
 
-- ✅ `test` job green on GitHub runners (import, compile check, 150+
-  tests, stress smoke).
-- ✅ Android job installs Godot, templates (from the `ci-assets` branch —
-  the official 1.28 GB tpz is unreachable/throttled from runners),
-  JDK 17, Android SDK, build-tools 34, and a throwaway debug keystore.
-- ❌ The final `--export-debug` invocation fails; cause not yet read —
-  **open the failed run → artifact `android-export-diagnostics`**
-  (~1 KB text: env, editor settings, template listing, full Godot log)
-  and check the job summary pane. Two likely culprits, in order:
-  1. Editor-settings keys need adjusting to what the log says verbatim
-     (`export/android/*` in
-     `~/.config/godot/editor_settings-<version>.tres`, written by the
-     workflow).
-  2. `apksigner` resolution inside `$ANDROID_HOME/build-tools/<ver>`.
+- ✅ `test` job green on GitHub runners (import, compile check, 156
+  tests / 24 suites, stress smoke).
+- ✅ Template delivery via the `ci-assets` branch verified end-to-end:
+  chunks reassemble into valid template APKs (127 MB debug assembly
+  passes archive integrity checks).
+- 🔧 FIXED in `.github/workflows/ci.yml` — three defects that made CI red
+  while every individual step looked healthy:
+  1. Editor settings were written to a filename Godot never loads
+     (`editor_settings-4.7.2-stable.tres`). Godot only reads
+     `editor_settings-<major>.<minor>.tres` (engine binary format string
+     `"editor_settings-%d.%d.tres"`; verified empirically), so
+     `export/android/java_sdk_path` / `android_sdk_path` never reached
+     the exporter. The workflow now derives major.minor from
+     `godot --version`.
+  2. The export step discarded Godot's exit code and never checked the
+     APK, so a failed export surfaced confusingly at the artifact-upload
+     step. The step now fails immediately on non-zero exit or missing
+     APK, with the full log in the job summary and the
+     `android-export-diagnostics` artifact (`export_log.txt`).
+  3. A duplicated second `Upload APK artifact` step was removed, and the
+     cleanup after template extraction now deletes only `assets/android`
+     (a blanket `rm -rf assets` would have stripped audio/fonts/icons
+     from the packaged PCK).
+- ⏳ Remaining unknown: Gradle dependency fetch inside the runner-side
+  export build. If anything further fails, the new gate prints the exact
+  Godot/Gradle error at the export step instead of masking it.
 
 Release-signed builds additionally require keystore secrets via GitHub
 *Settings → Secrets*, wired into a release job — intentionally not
