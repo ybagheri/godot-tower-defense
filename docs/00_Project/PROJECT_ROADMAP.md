@@ -1,11 +1,14 @@
 ---
 Document ID: PROJ-0002
 Title: Project Roadmap
-Version: 1.0.0
+Version: 1.1.0
 Status: Approved
 Owner: Project Architecture
 Created: 2026-07-23
 Last Updated: 2026-08-27
+
+> v1.1.0: VS scope ratified (G-01..G-04, G-07); hero system formally
+> deferred to Phase 4; stage targets bound to ../02_GDD/STAGES.md.
 Dependencies:
   - PROJ-0001 Project Manifest
   - ARCH-0001 Architecture Overview
@@ -268,16 +271,13 @@ Create a small but polished version of the final game.
 
 ---
 
-## Content
+## Content (ratified scope, GDD 2026-08-27)
 
-Example:
-
-- 5 stages
-- multiple towers
-- multiple enemies
-- hero system
-- abilities
-- progression
+- 5 stages - ../02_GDD/STAGES.md
+- fixed 3-tower bar - ../02_GDD/TOWERS.md
+- fixed 4-enemy ladder, single boss - ../02_GDD/ENEMIES.md
+- abilities v1 (AREA_DAMAGE + FREEZE)
+- progression & save-driven unlocks
 
 ---
 
@@ -309,13 +309,11 @@ Expand the game content.
 
 ## Add:
 
-- campaign stages
-- enemies
-- bosses
-- towers
-- heroes
-- upgrades
-- skills
+- campaign stages beyond VS set
+- new enemies/bosses/towers
+- HERO system (deferred from VS per G-01; spec-first restart required)
+- StatusEffect component family (slow/burn/chain; freeze ships in VS)
+- upgrades/skills expansion
 
 ---
 
@@ -492,7 +490,7 @@ M10/M11 — Android device verification, then VS content completion
 ```
 
 Live evidence snapshot: `PROJECT_STATUS.md` (PROJ-0005).
-Design decisions outstanding: `../10_Game_Design/DESIGN_GAPS.md`.
+Design decisions outstanding: `../12_Game_Design/DESIGN_GAPS.md`.
 
 ---
 

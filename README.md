@@ -1,6 +1,7 @@
-# Godot Tower Defense
+# Citadel Shield TD
 
-> A production-quality, data-driven Tower Defense framework and game built with **Godot 4**.
+> A production-quality, data-driven Tower Defense game built with **Godot 4**.
+> Repository/package identity stays `godot-tower-defense` (branding decision G-09).
 
 ---
 
@@ -83,7 +84,7 @@ godot-tower-defense/
 │   ├── 01_Architecture/     # ARCH-0001 layering & boundaries
 │   ├── 04_Specifications/   # SPEC-0001..0015 implementation contracts
 │   ├── 05_ADR/              # architecture decision records
-│   ├── 10_Game_Design/      # assumptions log + design gap register
+│   ├── 12_Game_Design/      # assumptions log + design gap register
 │   ├── 10_Testing/          # performance records
 │   └── 11_Release/          # REL-0001 Android build guide
 │

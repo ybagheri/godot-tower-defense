@@ -45,16 +45,16 @@ docs/
 ├── INDEX.md                 # this file (DOC-0000)
 ├── 00_Project/              # project-level documents
 ├── 01_Architecture/         # high-level architecture
-├── 02_GDD/                  # game design document        [EMPTY — PLANNED]
+├── 02_GDD/                  # VS scope ratifications (towers/enemies/stages)
 ├── 04_Specifications/       # SPEC-0001..0015 contracts
 ├── 05_ADR/                  # architecture decision records
 ├── 06_Art/                  # art bible                   [EMPTY — PLANNED]
 ├── 07_Lore/                 # world lore                  [EMPTY — PLANNED]
 ├── 08_Audio/                # audio bible                 [EMPTY — PLANNED]
 ├── 09_Level_Design/         # level design                [EMPTY — PLANNED]
-├── 10_Game_Design/          # design assumptions & gaps
 ├── 10_Testing/              # testing documentation
-└── 11_Release/              # release process
+├── 11_Release/              # release process
+└── 12_Game_Design/          # design assumptions & gaps
 ```
 
 There is no `03_GameBible/`, `05_API/`, `06_Balance/`, `07_ArtBible/`,
@@ -62,11 +62,10 @@ There is no `03_GameBible/`, `05_API/`, `06_Balance/`, `07_ArtBible/`,
 listed aspirational names that were never created. ADRs live in `05_ADR/`;
 a home for RFCs stays PLANNED until the first RFC exists.
 
-**Known debt:** two folder pairs share a number prefix (`10_Game_Design` vs
-`10_Testing`, `11_AI` vs `11_Release`) — naming-collision leftovers of the
-growth history. Existing cross-references (CHANGELOG, REL-0001, assumptions)
-would break on rename, so renumbering requires a dedicated ADR decision,
-never an unprompted rename.
+**Numbering:** canonicalized 2026-08-27 via ADR-0003 — collisions resolved
+(`10_Game_Design` renamed to **`12_Game_Design`**; empty untracked `11_AI`
+placeholder removed). Number **03** stays reserved for the future GameBible.
+Never reuse numbers without an RFC/ADR.
 
 ---
 
@@ -107,11 +106,19 @@ content.
 
 ---
 
-# 02_GDD — Game Design Document            [EMPTY — PLANNED]
+# 02_GDD — Game Design Document
 
-Directory reserved; PLANNED files: GAME_VISION, GAMEPLAY_LOOP, TOWERS,
-ENEMIES, SPELLS, STAGES, CAMPAIGN. Until authored, design decisions are
-tracked in `10_Game_Design/ASSUMPTIONS.md` and `DESIGN_GAPS.md`.
+Files (actual):
+
+```
+TOWERS.md   # VS tower bar ratified (G-03)
+ENEMIES.md  # VS ladder, flying-mix and boss rules ratified (G-04)
+STAGES.md   # 5-stage plan, map archetypes, wave norms (G-07)
+```
+
+PLANNED: GAME_VISION / GAMEPLAY_LOOP / SPELLS / CAMPAIGN deep-dives.
+Until authored, ability scope lives in ASSUMPTIONS (A10) and campaign
+structure in campaigns/*.tres plus these three documents.
 
 ---
 
@@ -140,6 +147,8 @@ Files (actual):
 
 ```
 ADR-0001-REPOSITORY-STRUCTURE.md
+ADR-0002-REPOSITORY-LAYOUT-AUTHORITATIVE.md
+ADR-0003-DOCS-NUMBERING-CANONICALIZED.md
 ```
 
 ADRs are immutable once approved; superseding requires a new ADR.
@@ -157,7 +166,7 @@ Current audio state: synthesized SFX from tools/generate_sfx.gd.
 
 ---
 
-# 10_Game_Design
+# 12_Game_Design
 
 Files (actual):
 
@@ -181,8 +190,8 @@ PERFORMANCE.md     # PERF-0002 measured performance record
 
 PLANNED: TEST_PLAN / UNIT_TESTS catalog / BUG_PROCESS.
 
-Harness reality: headless runner `tests/test_runner.tscn` discovers
-`tests/unit/*_test.gd`; `tests/integration/` exists but is EMPTY today.
+Harness reality: the headless runner discovers `tests/unit/*_test.gd` first,
+then `tests/integration/*_test.gd` (battle suite lives there since 2026-08-27).
 
 ---
 

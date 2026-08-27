@@ -4,6 +4,43 @@ All notable changes to the **godot-tower-defense** project are documented here.
 
 ## [Unreleased]
 
+### Added — VS scope ratification & design-decision sweep (2026-08-27)
+
+- DESIGN_GAPS P0/P1 rows RESOLVED with recorded decisions: heroes deferred
+  to Phase 4 (G-01), damage model ratified final into SPEC-0006 (G-02),
+  3-tower bar and 4-enemy ladder frozen in new 02_GDD docs TOWERS/ENEMIES
+  (G-03/G-04), freeze-only ability scope locked for VS (G-05), progression
+  policy ratified into SPEC-0011 with thresholds moved out of code into
+  balance_default.tres (G-06), five-stage plan ratified AND implemented
+  (G-07/G-06 prerequisite), castle model fixed as passive-HP plus breach
+  damage (G-08), Citadel Shield TD branding applied repo-wide while keeping
+  the git/package id godot-tower-defense (G-09).
+- Three new data-only stages with hand-synced maps: Ironwood Pass (single
+  long switchback, 8 waves), Broken Crossroads (two converging lanes,
+  8 waves), Warlords Gate (dense finale road, 9 waves); campaign chain now
+  five entries; localization keys added.
+- Regression coverage: star thresholds honor BalanceDefinition data
+  (custom-band test), invalid threshold ordering rejected by validation,
+  campaign entries pinned id-by-id with maps and clean validation.
+- `tests/integration/` populated: `battle_integration_test` moved there and
+  the runner now discovers unit suites first, integration second.
+- CI gains a DORMANT `android-release-apk` job gated on the
+  RELEASE_SIGNING_ENABLED repository variable; fails loudly without
+  complete RELEASE_* secrets. Manual prerequisite documented in REL-0001.
+
+### Changed — VS scope ratification & design-decision sweep (2026-08-27)
+
+- ADR-0002: repository layout declared authoritative over ARCH-0001 prose;
+  engine layer mapped to scripts/core+managers+events with binding layer
+  rules (components may type against Definition resources for configuration
+  only - accepted deviation, core purity re-verified).
+- ADR-0003: docs numbering canonicalized - `10_Game_Design` renamed to
+  `12_Game_Design`, empty untracked `11_AI` removed, number 03 reserved;
+  live cross-references migrated, historical changelog paths kept.
+- ARCHITECTURE_OVERVIEW layer-2 section now describes the actual layout.
+- Main menu title, project.godot app name and both Android presets carry
+  the ratified brand string.
+
 ### Added — repository audit (2026-08-27)
 
 - `docs/00_Project/PROJECT_STATUS.md` (PROJ-0005): evidence-based status

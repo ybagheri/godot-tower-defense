@@ -669,3 +669,23 @@ Events announce.
 ---
 
 # End of Document
+
+---
+
+# Ratification Note (G-02)
+
+The formulas above were RATIFIED FINAL on 2026-08-27 (DESIGN_GAPS G-02,
+assumption A1 -> final rule):
+
+```
+PHYSICAL : max(1, base - armor)
+TRUE     : base (ignores armor and resistance)
+Elemental: max(1, base * (1 - clamp(resistance, 0, 1)))
+Critical : rolls after mitigation; multiplier >= 1 on mitigated amount
+```
+
+Balance tuning lives exclusively in resources/*.tres values. Changing this
+ratified model now requires a new ADR plus migration of every shipped .tres
+and its recorded baselines. Reference implementation: static
+CombatSystem.calculate_damage(); pinned behavior:
+tests/unit/combat_system_test.gd (8 tests).

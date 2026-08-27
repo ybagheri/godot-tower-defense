@@ -598,3 +598,21 @@ Content creates experiences.
 ---
 
 # End of Document
+
+---
+
+# Ratification Note (G-06)
+
+PROGRESSION POLICY RATIFIED FINAL on 2026-08-27:
+
+- Star bands: three stars at castle-health >= THREE_STAR_HEALTH_RATIO,
+  two stars at >= TWO_STAR_HEALTH_RATIO, otherwise one (inclusive bounds).
+  Thresholds are DATA: BalanceDefinition fields persisted in
+  resources/balance/balance_default.tres (shipped defaults keep the
+  historical 0.7 / 0.35 policy, so recorded saves stay valid).
+- Unlock policy: strictly sequential - campaign entry N unlocks when entry
+  N-1 has at least ONE recorded star (CampaignDefinition.is_entry_unlocked).
+- Best result per stage wins: record_stage_result keeps max(stars).
+- Reference implementation: ProgressionTracker.stars_for_health_ratio;
+  pinned behavior: lifecycle_progression_test (thresholds incl. custom-balance)
+  and campaign_system_test (gate wiring).

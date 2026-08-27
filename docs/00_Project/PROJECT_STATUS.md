@@ -1,7 +1,7 @@
 ---
 Document ID: PROJ-0005
 Title: Project Status Report
-Version: 1.0.0
+Version: 1.1.0
 Status: Approved
 Owner: Project Architecture
 Created: 2026-08-27
@@ -65,48 +65,50 @@ final human gate per REL-0001. M9 groundwork shipped in 0.8.0.
 
 ## Planned systems / content
 
-- Hero system — listed under Phase 3 but UNSPECIFIED and unimplemented;
-  decide via DESIGN_GAPS G-01 before building
-- Additional stages beyond stage_001/stage_002 (data-driven; user-requested)
-- Integration tests in `tests/integration/` (directory currently EMPTY;
-  `battle_integration_test` lives in unit/ today)
-- Release signing job (keystore secrets intentionally not configured)
+- Hero system DEFERRED to Phase 4 by decision G-01 (spec-first restart required).
+- Release signing: scaffolded DORMANT CI job awaiting maintainer secrets
+  (see REL-0001 manual prerequisite); nothing fabricated in its place.
+- Phase 4 candidates: StatusEffect family, control tower, castle acts.
+- All five VS stages SHIPPED as of this version (G-07); content polish and
+  tuning continue against device data.
 
 ## Known technical debt
 
 | Item | Where noted |
 |------|-------------|
-| Docs directory numbering collisions (`10_Game_Design` vs `10_Testing`, `11_AI` vs `11_Release`) deviate from INDEX naming rules; renames deferred to avoid breaking cross-references | docs/INDEX.md §Structure |
-| ARCH-0001 names an `engine/` layout; the engine layer actually lives at `scripts/core`, `scripts/managers`, … Repo structure is authoritative for existing files | ARCHITECTURE_OVERVIEW follow-up |
-| `scripts/components/*` couple to game Definitions (`configure_from_definition(TowerDefinition)` etc.) — pragmatic factory-wiring deviation from strict layering; documented, core itself stays pure | This report |
+| Historical CHANGELOG lines keep pre-rename doc paths (log semantics); live refs migrated per ADR-0003 | ADR-0003 |
 | Prototype SVG art placeholders (assets/sprites policy paths) | Art status below |
 | Historical doc/test count drift: CHANGELOG-era "156 tests"; suite sums to 157 since 2026-08-27 harness fix era | CHANGELOG forward-corrected |
 
 ## Known design assumptions
 
-Tracked in `docs/10_Game_Design/ASSUMPTIONS.md` (A1–A11); prioritized
-resolution list in `docs/10_Game_Design/DESIGN_GAPS.md`.
+Tracked in `docs/12_Game_Design/ASSUMPTIONS.md` (A1–A11); resolution
+register at `docs/12_Game_Design/DESIGN_GAPS.md`.
 
 ## Test status
 
-**24 suites / 157 tests — ALL PASSING** headless (Godot 4.7.2, 2026-08-27),
+**24 suites / 159 tests — ALL PASSING** headless (Godot 4.7.2, 2026-08-27),
 plus validate_scripts.gd (55 scripts compile OK) and the CI stress smoke gate.
+Taxonomy now matches intent: unit suites run first, the battle integration
+suite runs from `tests/integration/`. New regressions cover data-driven
+star thresholds and the five-stage campaign chain.
 
 ## CI status
 
-GitHub Actions two-job pipeline proven green through run #16: `test`
-(import → compile-check → tests → stress smoke gating on `RESULT avg_frame`)
-then `android-debug-apk`. Pin 4.7.2-stable matches project.godot. Push
-71765a3 awaits its run result.
+Three-job pipeline: `test` → `android-debug-apk` proven green (run #16);
+a third `android-release-apk` job exists but is DORMANT behind the
+RELEASE_SIGNING_ENABLED repository variable until the maintainer supplies
+keystore secrets (REL-0001 §Release signing). Pin 4.7.2-stable matches
+project.godot.
 
 ## Android status
 
 - Debug APK PROVEN GREEN (CI run #16, attempt #1, ~28 MB artifact).
 - Presets: GL Compatibility, ETC2/ASTC, sensor landscape (project setting 4),
   touch emulation both directions.
-- Device install/touch/save/audio verification PENDING (M10).
-- Export preset version/name was stale 0.6.0 vs project 0.8.0 — aligned
-  2026-08-27 during this audit.
+- Device install/touch/save/audio verification PENDING (M10 human gate).
+- Package display name now ships the ratified brand (G-09); package id
+  io.github.ybagheri.godottd unchanged for store continuity.
 
 ## Art status
 
@@ -115,14 +117,15 @@ Placeholder SVGs for all enemies/towers/castle; dark medieval theme applied
 
 ## Current blockers
 
-1. M10 human gate needs a physical Android device round per artifact.
-2. DESIGN_GAPS P0 decisions before further gameplay content work.
+1. M10 human gate: one physical mid-range device round (touch, save path,
+   audio, on-device FPS) to close REL-0001 checklist items.
 
 ## Next milestone
 
-M11 — Vertical Slice completion candidate: resolve GAPS P0, add the
-requested new stages as data-only content if P0 allows, verify end-to-end
-on device, and apply the branding decision (G-09).
+M11 — close the M10 device checklist and tune from real play data:
+adjust wave pacing only through .tres if needed, record on-device FPS into
+PERFORMANCE.md, then judge VS complete. P2 gaps (abilities feel, audio, art,
+tool RFC) proceed afterwards as asset/tool work arrives.
 
 ## Definition of Done — next milestone
 

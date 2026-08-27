@@ -6,7 +6,7 @@ spec that permits inference and the milestone that must revisit it.
 
 | # | Assumption | Basis | Revisit when |
 |---|------------|-------|--------------|
-| A1 | Damage formula: PHYSICAL flat armor (min 1 chip), elemental percentage resistance (min 1), TRUE unmitigated; crit multiplies post-mitigation | SPEC-0006 damage rules prose | Combat GDD |
+| A1 | Damage formula: PHYSICAL flat armor (min 1 chip), elemental percentage resistance (min 1), TRUE unmitigated; crit multiplies post-mitigation | SPEC-0006 damage rules prose | RATIFIED FINAL 2026-08-27 via G-02 - formula frozen verbatim in SPEC-0006; balance lives only in .tres |
 | A2 | Enemy/Tower definitions carry an optional cosmetic `visual_scene` (plain Node2D); combat components are ALWAYS factory-assembled. Deviates from SPEC wording "Scene Reference" deliberately to keep component ownership single-sourced | ARCH-0001 factory rules; SPEC-0008 scene ref optional | Vertical Slice (M5) art pass |
 | A3 | Flying targeting: towers have can_target_flying flag defaulting true until roster defines counter-play | SPEC-0007 priorities list only | Tower roster GDD |
 | A4 | Balance numbers live in shipped `.tres` content (`resources/`); test fixtures duplicate small values locally | SPEC-0001 forbids hardcoded gameplay values in code paths | First balance pass |
@@ -15,5 +15,5 @@ spec that permits inference and the milestone that must revisit it.
 | A7 | Map visuals (Line2D route) and stage route waypoints are synchronized MANUALLY in M4; a path-drawing editor tool is the future fix | No tooling milestone yet | Editor tooling / level design doc |
 | A8 | HUD binds via controller.bind_controller() because children become ready before parents; controller binds UI LAST so catalogs are live | Godot scene lifecycle ordering | UI refactor if composition changes |
 | A9 | All SFX/music are synthesized by tools/generate_sfx.gd (oscillators + envelopes); provenance = this repository, no external samples | §41 asset policy | Commissioned/replaced audio in polish |
-| A10 | Ability v1 supports two archetypes (AREA_DAMAGE, FREEZE) via AbilityDefinition; burn/slow/chain arrive with the full StatusEffect component (SPEC-0015 future list) | SPEC-0015 effect types | Status effect system milestone |
+| A10 | Ability v1 supports two archetypes (AREA_DAMAGE, FREEZE) via AbilityDefinition; burn/slow/chain arrive with the full StatusEffect component (SPEC-0015 future list) | SPEC-0015 effect types | SCOPE LOCKED 2026-08-27 via G-05: VS ships freeze-only; full family is a Phase 4 milestone |
 | A11 | Event->sound mapping lives as a const table in AudioManager; moves to data when designers need to retune without code | SPEC-0014 mapping section | Audio bible / settings pass |
