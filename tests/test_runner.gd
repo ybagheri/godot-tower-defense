@@ -35,11 +35,21 @@ func _run() -> void:
 		get_tree().quit(1)
 
 
+## Suite discovery per the intended taxonomy: every tests/unit/*_test.gd
+## runs first, then every tests/integration/*_test.gd. Failure semantics
+## are identical across categories.
 func _discover_suites() -> PackedStringArray:
+	var paths := PackedStringArray()
+	for category: String in ["unit", "integration"]:
+		paths.append_array(_suites_in(category))
+	return paths
+
+
+func _suites_in(category: String) -> PackedStringArray:
 	var names := PackedStringArray()
-	var directory := DirAccess.open("res://tests/unit")
+	var directory := DirAccess.open("res://tests/" + category)
 	if directory == null:
-		printerr("Cannot open res://tests/unit")
+		printerr("Cannot open res://tests/" + category)
 		return names
 	for file: String in directory.get_files():
 		if file.ends_with("_test.gd"):
@@ -47,7 +57,7 @@ func _discover_suites() -> PackedStringArray:
 	names.sort()
 	var paths := PackedStringArray()
 	for file: String in names:
-		paths.append("res://tests/unit/" + file)
+		paths.append("res://tests/%s/" % category + file)
 	return paths
 
 
