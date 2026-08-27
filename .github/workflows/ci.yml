@@ -78,7 +78,12 @@ jobs:
       - name: Install Android export templates (from ci-assets branch)
         run: |
           set -e
-          TPL_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}"
+          # Godot resolves templates as export_templates/<major>.<minor>.<patch>.<status>
+          # (DOT-separated); the release-tag hyphen form (4.7.2-stable) never matches
+          # and export aborts instantly with "No export template found". Proven
+          # empirically against Godot 4.7.2 (see docs/11_Release/ANDROID.md).
+          TPL_VER="${GODOT_VERSION/-/.}"
+          TPL_DIR="$HOME/.local/share/godot/export_templates/${TPL_VER}"
           mkdir -p "$TPL_DIR"
           # Templates ship on the ci-assets branch as <100MB git chunks
           # (the official 1.28GB tpz is throttled/unreachable from runners).
@@ -89,7 +94,13 @@ jobs:
           # Strip ONLY the fetched chunk dir; a blanket "rm -rf assets"
           # would also wipe game audio/fonts/icons from the packaged PCK.
           rm -rf assets/android
-          ls -la "$TPL_DIR" | tee -a "$GITHUB_STEP_SUMMARY"
+          {
+            echo "== templates @ $TPL_DIR =="
+            ls -la "$TPL_DIR"
+          } >> "$GITHUB_STEP_SUMMARY"
+          # Fail fast HERE if reassembly produced junk instead of failing later.
+          test -s "$TPL_DIR/android_debug.apk"
+          test -s "$TPL_DIR/android_release.apk"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -170,7 +181,7 @@ jobs:
             echo "== ANDROID_HOME =="; echo "$ANDROID_HOME"; ls "$ANDROID_HOME" 2>/dev/null
             echo "== build-tools =="; ls "$ANDROID_HOME/build-tools" 2>/dev/null
             echo "== editor settings =="; ls -la ~/.config/godot/ 2>/dev/null; cat ~/.config/godot/editor_settings-*.tres 2>/dev/null
-            echo "== templates =="; ls -la ~/.local/share/godot/export_templates/${GODOT_VERSION}/ 2>/dev/null
+            echo "== templates =="; ls -la ~/.local/share/godot/export_templates/ 2>/dev/null; ls -la ~/.local/share/godot/export_templates/*/ 2>/dev/null
             echo "== keystore =="; ls -la ~/.android/ 2>/dev/null
             echo "== export log =="; cat export_log.txt 2>/dev/null
           } > diagnostics.txt

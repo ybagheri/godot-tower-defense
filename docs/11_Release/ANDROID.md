@@ -1,7 +1,7 @@
 ---
 Document ID: REL-0001
 Title: Android Build Guide
-Version: 1.0.1
+Version: 1.0.2
 Status: Approved
 Owner: Release Engineering
 Created: 2026-08-26
@@ -55,9 +55,21 @@ successful run → artifact **godottd-debug-apk**.
      cleanup after template extraction now deletes only `assets/android`
      (a blanket `rm -rf assets` would have stripped audio/fonts/icons
      from the packaged PCK).
-- ⏳ Remaining unknown: Gradle dependency fetch inside the runner-side
-  export build. If anything further fails, the new gate prints the exact
-  Godot/Gradle error at the export step instead of masking it.
+  4. Template APKs were installed under a hyphenated release-tag
+     directory (`export_templates/4.7.2-stable`), but Godot resolves
+     templates ONLY at `export_templates/<major>.<minor>.<patch>.<status>`
+     dot-separated (`4.7.2.stable`), so every export aborted instantly
+     with "No export template found". Proven by an A/B reproduction
+     against the identical Godot 4.7.2 binary: hyphen layout ->
+     "No export template found at .../4.7.2.stable/android_debug.apk";
+     dotted layout -> that class of error disappears entirely. The
+     workflow now derives the dotted name from `$GODOT_VERSION` and
+     asserts both reassembled template APKs are non-empty before export.
+- ⏳ Remaining unknown: the first full runner-side export with correct
+  templates (non-Gradle path: packaged PCK into template APK +
+  apksigner/zipalign signing via build-tools 34). If anything fails,
+  the export gate prints the exact engine error at that step instead of
+  masking it; on-device touch/install testing remains the final gate.
 
 Release-signed builds additionally require keystore secrets via GitHub
 *Settings → Secrets*, wired into a release job — intentionally not

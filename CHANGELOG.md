@@ -13,6 +13,13 @@ All notable changes to the **godot-tower-defense** project are documented here.
   at artifact upload, remove a duplicated upload step, scope diagnostics
   to `export_log.txt`, and clean up only `assets/android` after template
   chunk extraction so game assets survive into the packaged PCK.
+- CI/Android: install Android export templates under the directory name
+  Godot actually resolves — `export_templates/<major>.<minor>.<patch>.<status>`
+  dot-separated (e.g. `4.7.2.stable`) — instead of the release-tag hyphen
+  form (`4.7.2-stable`), which the engine never matches, making every
+  export abort instantly with "No export template found". The install
+  step now also asserts both reassembled template APKs are non-empty and
+  logs the resolved directory into the job summary.
 
 ## [0.8.0] - 2026-08-26
 
