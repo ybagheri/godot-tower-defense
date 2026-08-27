@@ -250,3 +250,119 @@ jobs:
           name: godottd-debug-apk
           path: exports/godottd-debug.apk
           if-no-files-found: error
+
+  # Release APK (signed). Intentionally DORMANT: this job is a scaffold that
+  # requires the maintainer to configure RELEASE_* secrets AND the
+  # RELEASE_SIGNING_ENABLED repository variable first. See the manual
+  # prerequisite section in docs/11_Release/ANDROID.md. Attempting to run it
+  # without configured secrets fails loudly instead of shipping unsigned.
+  android-release-apk:
+    name: Android release APK (signed)
+    runs-on: ubuntu-latest
+    needs: android-debug-apk
+    if: vars.RELEASE_SIGNING_ENABLED == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail fast when secrets are missing (never sign blind)
+        env:
+          KS_B64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KS_B64" ] || [ -z "$KS_PASS" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASS" ]; then
+            echo "::error::Release signing requested but RELEASE_* secrets are incomplete. See docs/11_Release/ANDROID.md"
+            exit 1
+          fi
+      - name: Restore Godot project import cache
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: android-import-${{ runner.os }}-${{ hashFiles('project.godot') }}-${{ hashFiles('**/*.gd', '**/*.import', '**/*.tres', '**/*.tscn') }}
+          restore-keys: |
+            android-import-${{ runner.os }}-
+      - name: Cache Godot binary
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-${{ env.GODOT_VERSION }}
+      - name: Install Godot
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          curl -sL -o /tmp/godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -o -q /tmp/godot.zip -d /tmp/godot-extract
+          mv /tmp/godot-extract/Godot_v${GODOT_VERSION}_linux.x86_64 ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+      - name: Install Android export templates (from ci-assets branch)
+        run: |
+          set -e
+          TPL_VER="${GODOT_VERSION/-/.}"
+          TPL_DIR="$HOME/.local/share/godot/export_templates/${TPL_VER}"
+          mkdir -p "$TPL_DIR"
+          git fetch --depth=1 origin ci-assets
+          git checkout FETCH_HEAD -- assets/android
+          cat assets/android/android_debug.apk.part*   > "$TPL_DIR/android_debug.apk"
+          cat assets/android/android_release.apk.part* > "$TPL_DIR/android_release.apk"
+          rm -rf assets/android
+          test -s "$TPL_DIR/android_debug.apk"
+          test -s "$TPL_DIR/android_release.apk"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Accept SDK licenses and install build tools
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager --install "platform-tools" "build-tools;34.0.0" "platforms;android-34" > /dev/null
+      - name: Decode keystore from secret
+        env:
+          KS_B64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+        run: |
+          mkdir -p ~/.android
+          echo "$KS_B64" | base64 -d > ~/.android/release.keystore
+          test -s ~/.android/release.keystore || { echo '::error::decoded keystore empty'; exit 1; }
+      - name: Configure Godot editor settings for Android
+        run: |
+          mkdir -p ~/.config/godot
+          GODOT_MM="$(~/godot-bin/godot --version | cut -d. -f1-2)"
+          cat > "~/.config/godot/editor_settings-${GODOT_MM}.tres" << SETTINGS
+          [application]
+          config/name="ci"
+
+          [export]
+          export/android/java_sdk_path="/usr/local/lib/android/sdk"
+          export/android/android_sdk_path="/usr/local/lib/android/sdk"
+          export/android/debug_keystore="~/.android/release.keystore"
+          export/android/debug_keystore_user="${{ secrets.RELEASE_KEY_ALIAS }}"
+          export/android/debug_keystore_pass="${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
+          export/android/release_keystore="~/.android/release.keystore"
+          export/android/release_keystore_user="${{ secrets.RELEASE_KEY_ALIAS }}"
+          export/android/release_keystore_pass="${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
+          SETTINGS
+          ls -la ~/.config/godot/
+      - name: Import project
+        run: ~/godot-bin/godot --headless --path . --import
+      - name: Export signed release APK
+        run: |
+          set -e
+          ~/godot-bin/godot --headless --path . --export-release "Android Release" exports/godottd-release.apk \
+            2>&1 | tee export_log.txt
+          test -s exports/godottd-release.apk || { echo '::error::release APK missing'; exit 1; }
+      - name: Upload signed release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: godottd-release-apk
+          path: exports/godottd-release.apk
+      - name: Upload export diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-diagnostics
+          path: export_log.txt

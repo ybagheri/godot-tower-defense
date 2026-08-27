@@ -95,6 +95,23 @@ Logic-side performance headroom is proven separately (see
 `docs/10_Testing/PERF_BASELINE.md`): gameplay logic stays under 0.1 ms per
 frame at 500 entities; device GPU profiling is the remaining unknown.
 
+## Release signing (manual prerequisite - DO NOT run without real secrets)
+
+The release-signing CI job exists but stays DISABLED until the maintainer
+configures GitHub *Settings -> Secrets and variables -> Actions*:
+
+| Name | Kind | Value |
+|------|------|-------|
+| `RELEASE_KEYSTORE_BASE64` | Secret | base64 of your upload keystore (.jks/.keystore) |
+| `RELEASE_KEYSTORE_PASSWORD` | Secret | keystore password |
+| `RELEASE_KEY_ALIAS` | Secret | key alias inside the keystore |
+| `RELEASE_KEY_PASSWORD` | Secret | key password |
+| `RELEASE_SIGNING_ENABLED` | **Repository VARIABLE** | set to `true` only when all three secrets above exist |
+
+Never commit keystores or passwords; never flip the variable before the
+secrets exist. Generate a keystore ONCE on trusted hardware with keytool
+(see playbook below), back it up offline, then lose access intentionally.
+
 ## One-time setup (maintainer machine)
 
 ```bash
