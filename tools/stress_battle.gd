@@ -6,11 +6,17 @@
 ##
 ## Measures LOGIC cost only (headless skips rendering); device GPU profiling
 ## remains part of REL-0001 verification.
+##
+## The harness UNCAPS the frame rate by default (Engine.max_fps = 0):
+## the shipped run/max_fps=60 project setting would otherwise clamp every
+## headless frame to ~16.67 ms and hide any logic cost below one 60 fps
+## frame (measured 2026-08-27). Pass max_fps=<n> to restore pacing.
 extends Node
 
 var enemy_count := 120
 var tower_count := 12
 var frames_to_sample := 360
+var max_fps_override := 0
 
 
 func _ready() -> void:
@@ -25,6 +31,9 @@ func _ready() -> void:
 				tower_count = int(parts[1])
 			"frames":
 				frames_to_sample = int(parts[1])
+			"max_fps":
+				max_fps_override = int(parts[1])
+	Engine.max_fps = max_fps_override
 	_build_battle()
 
 
