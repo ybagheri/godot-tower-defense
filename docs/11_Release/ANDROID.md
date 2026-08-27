@@ -65,11 +65,20 @@ successful run → artifact **godottd-debug-apk**.
      dotted layout -> that class of error disappears entirely. The
      workflow now derives the dotted name from `$GODOT_VERSION` and
      asserts both reassembled template APKs are non-empty before export.
-- ⏳ Remaining unknown: the first full runner-side export with correct
-  templates (non-Gradle path: packaged PCK into template APK +
-  apksigner/zipalign signing via build-tools 34). If anything fails,
-  the export gate prints the exact engine error at that step instead of
-  masking it; on-device touch/install testing remains the final gate.
+- 🧪 Pipeline hardening (2026-08-27): every input was proven correct by a
+  full local reproduction of the CI export (JDK 17 + SDK build-tools 34 +
+  throwaway keystore + dotted template dir → signed debug APK), yet GitHub
+  runners killed Godot mid-`first_scan_filesystem` (~83 %) on three
+  consecutive runs with no engine error text (exit=1). Mitigations now in
+  `.github/workflows/ci.yml`: a persistent `.godot` import cache (collapses
+  the flaky cold-scan window on warm runs) and a 3-attempt export loop
+  with `--verbose` retries, per-attempt summaries, and per-attempt logs.
+- ⏳ Remaining unknown: whether these mitigations green the runner-side
+  export (non-Gradle path: PCK into template APK + apksigner signing).
+  Diagnostics are fully public now: each exporter input is emitted as a
+  job annotation (`::notice`), and failing attempts stream their engine
+  log lines as `A<n>_EXP[k]` error annotations. On-device touch/install
+  testing remains the final gate.
 
 Release-signed builds additionally require keystore secrets via GitHub
 *Settings → Secrets*, wired into a release job — intentionally not

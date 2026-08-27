@@ -58,6 +58,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Restore Godot project import cache
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: android-import-${{ runner.os }}-${{ hashFiles('project.godot') }}-${{ hashFiles('**/*.gd', '**/*.import', '**/*.tres', '**/*.tscn') }}
+          restore-keys: |
+            android-import-${{ runner.os }}-
+
       - name: Cache Godot binary
         id: godot-cache
         uses: actions/cache@v4
@@ -171,31 +179,41 @@ jobs:
 
       - name: Export debug APK
         run: |
-          ~/godot-bin/godot --headless --path . --import
-          set +e
-          ~/godot-bin/godot --headless --export-debug --path . \
-            "Android Debug" exports/godottd-debug.apk \
-            > export_log.txt 2>&1
-          EXIT_CODE=$?
-          {
-            echo "### Export exit: $EXIT_CODE"
-            echo '```'
-            tail -60 export_log.txt
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          # Fail the export step ITSELF (with the log in the summary)
-          # instead of silently letting a missing APK break the upload step.
-          if [ "$EXIT_CODE" -ne 0 ] || [ ! -s exports/godottd-debug.apk ]; then
-            echo "::error::Godot export failed (exit=$EXIT_CODE). Full log: artifact 'android-export-diagnostics'."
-            # Surface the engine log itself as PUBLIC annotations (logs/artifacts
-            # are auth-gated, annotations are not) so failures are diagnosable
-            # without repo-access tokens.
+          set -e
+          mkdir -p exports
+          ok=0
+          for attempt in 1 2 3; do
+            echo "::notice::EXPORT_ATTEMPT=$attempt"
+            EXTRA=""
+            [ "$attempt" -gt 1 ] && EXTRA="--verbose"
+            ~/godot-bin/godot --headless $EXTRA --path . --import > "import_log_$attempt.txt" 2>&1 || true
+            set +e
+            ~/godot-bin/godot --headless $EXTRA \
+              --export-debug --path . "Android Debug" exports/godottd-debug.apk \
+              > "export_log_$attempt.txt" 2>&1
+            EXIT_CODE=$?
+            set -e
+            {
+              echo "### Attempt $attempt exit: $EXIT_CODE"
+              echo '```'
+              tail -40 "export_log_$attempt.txt"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            if [ "$EXIT_CODE" -eq 0 ] && [ -s exports/godottd-debug.apk ]; then
+              cp "export_log_$attempt.txt" export_log.txt
+              echo "::notice::EXPORT_SUCCESS_ON_ATTEMPT=$attempt"
+              ok=1
+              break
+            fi
             n=0
             while IFS= read -r line; do
               n=$((n+1))
               clean="$(printf '%s' "$line" | tr '\r' ' ' | cut -c1-400)"
-              printf '::error::EXP[%02d]|%s\n' "$n" "$clean"
-            done < <(tail -25 export_log.txt)
+              printf '::error::A%s_EXP[%02d]|%s\n' "$attempt" "$n" "$clean"
+            done < <(tail -15 "export_log_$attempt.txt")
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::Godot export failed in all attempts."
             exit 1
           fi
 
@@ -204,7 +222,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-export-diagnostics
-          path: export_log.txt
+          path: |
+            export_log*.txt
+            import_log*.txt
           if-no-files-found: ignore
 
       - name: Diagnostics bundle
@@ -219,7 +239,7 @@ jobs:
             echo "== editor settings =="; ls -la ~/.config/godot/ 2>/dev/null; cat ~/.config/godot/editor_settings-*.tres 2>/dev/null
             echo "== templates =="; ls -la ~/.local/share/godot/export_templates/ 2>/dev/null; ls -la ~/.local/share/godot/export_templates/*/ 2>/dev/null
             echo "== keystore =="; ls -la ~/.android/ 2>/dev/null
-            echo "== export log =="; cat export_log.txt 2>/dev/null
+            echo "== export log =="; cat export_log*.txt 2>/dev/null
           } > diagnostics.txt
           cat diagnostics.txt >> "$GITHUB_STEP_SUMMARY"
 

@@ -20,6 +20,14 @@ All notable changes to the **godot-tower-defense** project are documented here.
   export abort instantly with "No export template found". The install
   step now also asserts both reassembled template APKs are non-empty and
   logs the resolved directory into the job summary.
+- CI/Android: harden the runner-side export against intermittent silent
+  kills during Godot's first filesystem scan — persistent `.godot`
+  import cache, 3-attempt retry loop with verbose logging on retries,
+  preflight assertions over every exporter input, and public annotation
+  telemetry (`::notice` inputs, `A<n>_EXP[k]` engine-log lines) so red
+  runs stay diagnosable without authenticated artifact access. Inputs
+  themselves were verified end-to-end by an identical local reproduction
+  producing a signed debug APK.
 
 ## [0.8.0] - 2026-08-26
 
