@@ -34,7 +34,7 @@ grow_vertical = 2
 [node name="Title" type="Label" parent="Center"]
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 44
-text = "GODOT TOWER DEFENSE"
+text = "CITADEL SHIELD TD"
 
 [node name="Subtitle" type="Label" parent="Center"]
 horizontal_alignment = 1

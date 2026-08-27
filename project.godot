@@ -6,7 +6,7 @@ config_version=5
 
 [application]
 
-config/name="godot-tower-defense"
+config/name="Citadel Shield TD"
 config/description="A production-quality, data-driven Dark Medieval Fantasy Tower Defense game."
 config/version="0.8.0"
 run/main_scene="res://scenes/ui/main_menu.tscn"
