@@ -1,0 +1,253 @@
+[gd_resource type="Resource" script_class="StageDefinition" load_steps=30 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/stage_definition.gd" id="1_stage"]
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="2_path"]
+[ext_resource type="Script" path="res://scripts/resources/wave_definition.gd" id="3_wave"]
+[ext_resource type="Script" path="res://scripts/resources/spawn_group_definition.gd" id="4_group"]
+[ext_resource type="PackedScene" path="res://scenes/maps/ironwood_pass.tscn" id="5_map"]
+
+[sub_resource type="Resource" id="path_main"]
+script = ExtResource("2_path")
+id = "stage003.main"
+display_name = "Ironwood Switchback"
+waypoints = PackedVector2Array(80, 140, 1140, 140, 1140, 340, 140, 340, 140, 560, 1160, 560)
+path_type = 0
+
+[sub_resource type="Resource" id="g_w1"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 12
+spawn_interval = 1.0
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_1"]
+script = ExtResource("3_wave")
+id = "stage003.wave_1"
+display_name = "Pickets"
+version = 1
+wave_number = 1
+spawn_groups = [SubResource("g_w1")]
+reward_gold = 55
+
+[sub_resource type="Resource" id="g_w2a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 16
+spawn_interval = 0.85
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w2b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 6
+spawn_interval = 0.65
+initial_delay = 4.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_2"]
+script = ExtResource("3_wave")
+id = "stage003.wave_2"
+display_name = "Skirmishers"
+version = 1
+wave_number = 2
+spawn_groups = [SubResource("g_w2a"), SubResource("g_w2b")]
+reward_gold = 65
+
+[sub_resource type="Resource" id="g_w3a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 14
+spawn_interval = 0.9
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w3b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 8
+spawn_interval = 0.55
+initial_delay = 4.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w3c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 3
+spawn_interval = 2.4
+initial_delay = 9.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_3"]
+script = ExtResource("3_wave")
+id = "stage003.wave_3"
+display_name = "Iron Vanguard"
+version = 1
+wave_number = 3
+spawn_groups = [SubResource("g_w3a"), SubResource("g_w3b"), SubResource("g_w3c")]
+reward_gold = 75
+
+[sub_resource type="Resource" id="g_w4a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 6
+spawn_interval = 2.0
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w4b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 18
+spawn_interval = 0.75
+initial_delay = 3.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_4"]
+script = ExtResource("3_wave")
+id = "stage003.wave_4"
+display_name = "Knight Column"
+version = 1
+wave_number = 4
+spawn_groups = [SubResource("g_w4a"), SubResource("g_w4b")]
+reward_gold = 85
+
+[sub_resource type="Resource" id="g_w5a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 16
+spawn_interval = 0.45
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w5b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 14
+spawn_interval = 1.05
+initial_delay = 2.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_5"]
+script = ExtResource("3_wave")
+id = "stage003.wave_5"
+display_name = "Gale Riders"
+version = 1
+wave_number = 5
+spawn_groups = [SubResource("g_w5a"), SubResource("g_w5b")]
+reward_gold = 95
+
+[sub_resource type="Resource" id="g_w6a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 8
+spawn_interval = 1.9
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w6b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 10
+spawn_interval = 0.5
+initial_delay = 5.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w6c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 20
+spawn_interval = 0.7
+initial_delay = 2.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_6"]
+script = ExtResource("3_wave")
+id = "stage003.wave_6"
+display_name = "Battering Line"
+version = 1
+wave_number = 6
+spawn_groups = [SubResource("g_w6a"), SubResource("g_w6b"), SubResource("g_w6c")]
+reward_gold = 110
+
+[sub_resource type="Resource" id="g_w7a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 24
+spawn_interval = 0.65
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w7b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 12
+spawn_interval = 0.45
+initial_delay = 3.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w7c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 4
+spawn_interval = 2.2
+initial_delay = 8.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_7"]
+script = ExtResource("3_wave")
+id = "stage003.wave_7"
+display_name = "Full March"
+version = 1
+wave_number = 7
+spawn_groups = [SubResource("g_w7a"), SubResource("g_w7b"), SubResource("g_w7c")]
+reward_gold = 130
+
+[sub_resource type="Resource" id="g_w8a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.ogre.boss"
+count = 1
+spawn_interval = 1.0
+initial_delay = 3.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w8b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 4
+spawn_interval = 2.4
+initial_delay = 0.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="g_w8c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 8
+spawn_interval = 0.6
+initial_delay = 8.0
+path_id = "stage003.main"
+
+[sub_resource type="Resource" id="w_8"]
+script = ExtResource("3_wave")
+id = "stage003.wave_8"
+display_name = "The Warlord of Ironwood"
+version = 1
+wave_number = 8
+spawn_groups = [SubResource("g_w8b"), SubResource("g_w8c"), SubResource("g_w8a")]
+is_boss_wave = true
+reward_gold = 170
+
+[resource]
+script = ExtResource("1_stage")
+id = "stage.003.ironwood_pass"
+display_key = "STAGE_IRONWOOD_PASS"
+display_name = "Ironwood Pass"
+waves = [SubResource("w_1"), SubResource("w_2"), SubResource("w_3"), SubResource("w_4"), SubResource("w_5"), SubResource("w_6"), SubResource("w_7"), SubResource("w_8")]
+paths = {
+"stage003.main": SubResource("path_main")
+}
+prep_time_seconds = 6.0
+starting_gold = 240
+castle_max_health = 100
+map_scene = ExtResource("5_map")

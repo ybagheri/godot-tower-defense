@@ -1,0 +1,269 @@
+[gd_resource type="Resource" script_class="StageDefinition" load_steps=30 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/stage_definition.gd" id="1_stage"]
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="2_path"]
+[ext_resource type="Script" path="res://scripts/resources/wave_definition.gd" id="3_wave"]
+[ext_resource type="Script" path="res://scripts/resources/spawn_group_definition.gd" id="4_group"]
+[ext_resource type="PackedScene" path="res://scenes/maps/broken_crossroads.tscn" id="5_map"]
+
+[sub_resource type="Resource" id="path_nw"]
+script = ExtResource("2_path")
+id = "stage004.northwest"
+display_name = "Northwest Lane"
+waypoints = PackedVector2Array(90, 160, 620, 160, 620, 330, 1130, 330)
+path_type = 0
+
+[sub_resource type="Resource" id="path_se"]
+script = ExtResource("2_path")
+id = "stage004.southeast"
+display_name = "Southeast Lane"
+waypoints = PackedVector2Array(1190, 640, 700, 640, 700, 430, 1130, 430, 1130, 340)
+path_type = 0
+
+[sub_resource type="Resource" id="g_w1a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 9
+spawn_interval = 1.1
+initial_delay = 0.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w1b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 9
+spawn_interval = 1.3
+initial_delay = 1.5
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="w_1"]
+script = ExtResource("3_wave")
+id = "stage004.wave_1"
+display_name = "Two Prongs"
+version = 1
+wave_number = 1
+spawn_groups = [SubResource("g_w1a"), SubResource("g_w1b")]
+reward_gold = 70
+
+[sub_resource type="Resource" id="g_w2a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 14
+spawn_interval = 0.85
+initial_delay = 0.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="g_w2b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 7
+spawn_interval = 0.6
+initial_delay = 4.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="w_2"]
+script = ExtResource("3_wave")
+id = "stage004.wave_2"
+display_name = "Split Advance"
+version = 1
+wave_number = 2
+spawn_groups = [SubResource("g_w2a"), SubResource("g_w2b")]
+reward_gold = 80
+
+[sub_resource type="Resource" id="g_w3a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 5
+spawn_interval = 2.2
+initial_delay = 0.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w3b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 12
+spawn_interval = 0.9
+initial_delay = 2.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w3c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 8
+spawn_interval = 0.55
+initial_delay = 1.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="w_3"]
+script = ExtResource("3_wave")
+id = "stage004.wave_3"
+display_name = "Crossing Forces"
+version = 1
+wave_number = 3
+spawn_groups = [SubResource("g_w3a"), SubResource("g_w3b"), SubResource("g_w3c")]
+reward_gold = 95
+
+[sub_resource type="Resource" id="g_w4a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 10
+spawn_interval = 0.5
+initial_delay = 0.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="g_w4b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 10
+spawn_interval = 0.55
+initial_delay = 2.5
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="w_4"]
+script = ExtResource("3_wave")
+id = "stage004.wave_4"
+display_name = "Gale Split"
+version = 1
+wave_number = 4
+spawn_groups = [SubResource("g_w4a"), SubResource("g_w4b")]
+reward_gold = 100
+
+[sub_resource type="Resource" id="g_w5a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 4
+spawn_interval = 2.0
+initial_delay = 0.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="g_w5b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 4
+spawn_interval = 2.1
+initial_delay = 1.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w5c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 18
+spawn_interval = 0.75
+initial_delay = 3.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="w_5"]
+script = ExtResource("3_wave")
+id = "stage004.wave_5"
+display_name = "Twin Walls"
+version = 1
+wave_number = 5
+spawn_groups = [SubResource("g_w5a"), SubResource("g_w5b"), SubResource("g_w5c")]
+reward_gold = 115
+
+[sub_resource type="Resource" id="g_w6a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 16
+spawn_interval = 0.7
+initial_delay = 0.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="g_w6b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 16
+spawn_interval = 0.75
+initial_delay = 0.8
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w6c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 9
+spawn_interval = 0.5
+initial_delay = 4.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="w_6"]
+script = ExtResource("3_wave")
+id = "stage004.wave_6"
+display_name = "Relentless Push"
+version = 1
+wave_number = 6
+spawn_groups = [SubResource("g_w6a"), SubResource("g_w6b"), SubResource("g_w6c")]
+reward_gold = 125
+
+[sub_resource type="Resource" id="g_w7a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.knight.elite"
+count = 7
+spawn_interval = 1.9
+initial_delay = 0.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w7b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 11
+spawn_interval = 0.45
+initial_delay = 2.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="w_7"]
+script = ExtResource("3_wave")
+id = "stage004.wave_7"
+display_name = "Anvil Choir"
+version = 1
+wave_number = 7
+spawn_groups = [SubResource("g_w7a"), SubResource("g_w7b")]
+reward_gold = 140
+
+[sub_resource type="Resource" id="g_w8a"]
+script = ExtResource("4_group")
+enemy_id = "enemy.ogre.boss"
+count = 1
+spawn_interval = 1.0
+initial_delay = 4.0
+path_id = "stage004.northwest"
+
+[sub_resource type="Resource" id="g_w8b"]
+script = ExtResource("4_group")
+enemy_id = "enemy.goblin.basic"
+count = 12
+spawn_interval = 1.1
+initial_delay = 0.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="g_w8c"]
+script = ExtResource("4_group")
+enemy_id = "enemy.wisp.fast"
+count = 7
+spawn_interval = 0.65
+initial_delay = 9.0
+path_id = "stage004.southeast"
+
+[sub_resource type="Resource" id="w_8"]
+script = ExtResource("3_wave")
+id = "stage004.wave_8"
+display_name = "The Warlord Claims the Crossroads"
+version = 1
+wave_number = 8
+spawn_groups = [SubResource("g_w8b"), SubResource("g_w8c"), SubResource("g_w8a")]
+is_boss_wave = true
+reward_gold = 180
+
+[resource]
+script = ExtResource("1_stage")
+id = "stage.004.broken_crossroads"
+display_key = "STAGE_BROKEN_CROSSROADS"
+display_name = "Broken Crossroads"
+waves = [SubResource("w_1"), SubResource("w_2"), SubResource("w_3"), SubResource("w_4"), SubResource("w_5"), SubResource("w_6"), SubResource("w_7"), SubResource("w_8")]
+paths = {
+"stage004.northwest": SubResource("path_nw"),
+"stage004.southeast": SubResource("path_se")
+}
+prep_time_seconds = 6.0
+starting_gold = 260
+castle_max_health = 100
+map_scene = ExtResource("5_map")

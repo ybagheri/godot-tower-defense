@@ -36,3 +36,6 @@ UI_ON_PATH_BLOCKED,Cannot build on the enemy path
 UI_TOWER_TOO_CLOSE,Too close to another tower
 UI_CANNOT_BUILD_HERE,Cannot build here
 UI_UNKNOWN_TOWER,Unknown tower
+STAGE_IRONWOOD_PASS,Ironwood Pass
+STAGE_BROKEN_CROSSROADS,Broken Crossroads
+STAGE_WARLORDS_GATE,Warlords Gate

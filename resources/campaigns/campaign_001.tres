@@ -1,9 +1,12 @@
-[gd_resource type="Resource" script_class="CampaignDefinition" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="CampaignDefinition" load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/campaign_definition.gd" id="1_def"]
 [ext_resource type="Script" path="res://scripts/resources/stage_entry_definition.gd" id="2_entry"]
 [ext_resource type="Resource" path="res://resources/stages/stage_001_test_range.tres" id="3_s1"]
 [ext_resource type="Resource" path="res://resources/stages/stage_002_twin_roads.tres" id="4_s2"]
+[ext_resource type="Resource" path="res://resources/stages/stage_003_ironwood_pass.tres" id="5_s3"]
+[ext_resource type="Resource" path="res://resources/stages/stage_004_broken_crossroads.tres" id="6_s4"]
+[ext_resource type="Resource" path="res://resources/stages/stage_005_warlords_gate.tres" id="7_s5"]
 
 [sub_resource type="Resource" id="entry_1"]
 script = ExtResource("2_entry")
@@ -13,10 +16,22 @@ stage = ExtResource("3_s1")
 script = ExtResource("2_entry")
 stage = ExtResource("4_s2")
 
+[sub_resource type="Resource" id="entry_3"]
+script = ExtResource("2_entry")
+stage = ExtResource("5_s3")
+
+[sub_resource type="Resource" id="entry_4"]
+script = ExtResource("2_entry")
+stage = ExtResource("6_s4")
+
+[sub_resource type="Resource" id="entry_5"]
+script = ExtResource("2_entry")
+stage = ExtResource("7_s5")
+
 [resource]
 script = ExtResource("1_def")
 id = "campaign.001.northern_march"
 display_key = "CAMPAIGN_NORTHERN_MARCH"
 display_name = "The Northern March"
-version = 1
-entries = [SubResource("entry_1"), SubResource("entry_2")]
+version = 2
+entries = [SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_4"), SubResource("entry_5")]

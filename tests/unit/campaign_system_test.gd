@@ -21,16 +21,22 @@ func _stars(stages: Dictionary) -> Dictionary:
 	return stages
 
 
-func test_campaign_ships_two_stages_in_order() -> void:
+func test_campaign_ships_five_stages_in_order() -> void:
 	assert_true((CAMPAIGN.validate().errors as PackedStringArray).is_empty(),
 			"shipped campaign validates clean")
-	assert_eq(2, CAMPAIGN.entries.size(), "two stage entries")
-	var first: StageDefinition = CAMPAIGN.entries[0].stage
-	var second: StageDefinition = CAMPAIGN.entries[1].stage
-	assert_eq("stage.001.test_range", first.id, "entry order stable")
-	assert_eq("stage.002.twin_roads", second.id, "entry order stable")
-	assert_not_null(first.map_scene, "stage 1 ships a map")
-	assert_not_null(second.map_scene, "stage 2 ships a map")
+	assert_eq(5, CAMPAIGN.entries.size(), "five stage entries per G-07")
+	var expected := ["stage.001.test_range", "stage.002.twin_roads",
+			"stage.003.ironwood_pass", "stage.004.broken_crossroads",
+			"stage.005.warlords_gate"]
+	for i: int in expected.size():
+		var entry_stage: StageDefinition = CAMPAIGN.entries[i].stage
+		assert_eq(expected[i], entry_stage.id, "entry order stable")
+		assert_not_null(entry_stage.map_scene,
+				"%s ships a map" % entry_stage.id)
+		assert_true((entry_stage.validate().errors as PackedStringArray).is_empty(),
+				"%s validates clean" % entry_stage.id)
+	var finale: StageDefinition = CAMPAIGN.entries[4].stage
+	assert_eq("STAGE_WARLORDS_GATE", finale.display_key, "finale keyed")
 
 
 func test_stage002_multi_route_content() -> void:
@@ -109,7 +115,8 @@ func test_menu_builds_buttons_with_fresh_save_locks() -> void:
 	var menu := MENU_SCENE.instantiate()
 	stage(menu)
 	var list: VBoxContainer = menu.get_node("%StageList")
-	assert_eq(2, list.get_child_count(), "one button per campaign entry")
+	assert_eq(CAMPAIGN.entries.size(), list.get_child_count(),
+			"one button per campaign entry")
 	var second_button: Button = list.get_child(1)
 	assert_true(second_button.disabled, "stage 2 disabled on fresh save")
 	assert_true(second_button.text.contains(tr("UI_LOCKED")), "locked label shown")

@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/shared/castle.tscn" id="1_castle"]
+
+[node name="IronwoodPass" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.098, 0.129, 0.105, 1)
+
+[node name="PathLine" type="Line2D" parent="."]
+z_index = -5
+points = PackedVector2Array(80, 140, 1140, 140, 1140, 340, 140, 340, 140, 560, 1160, 560)
+width = 52.0
+default_color = Color(0.353, 0.29, 0.196, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="SpawnMarker" type="Polygon2D" parent="."]
+position = Vector2(80, 140)
+color = Color(0.556, 0.137, 0.11, 1)
+polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
+
+[node name="Castle" parent="." instance=ExtResource("1_castle")]
+position = Vector2(1160, 560)
