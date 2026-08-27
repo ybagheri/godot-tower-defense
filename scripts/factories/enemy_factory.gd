@@ -39,6 +39,11 @@ static func create(definition: EnemyDefinition, path: PathDefinition, parent: No
 	entity.add_component(movement)
 	movement.setup(path, definition.speed)
 
+	# Spawn ON the route: without this the entity sits at container origin
+	# (0,0) until advance() walks it diagonally toward waypoints[1], which
+	# read on-device as enemies leaving the path until its first turn.
+	entity.position = path.first_waypoint()
+
 	var loot := LootComponent.new()
 	entity.add_component(loot)
 	loot.configure(definition.reward_gold, definition.damage_to_castle)

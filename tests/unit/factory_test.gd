@@ -62,6 +62,25 @@ func test_enemy_factory_flags() -> void:
 	enemy.free()
 
 
+func test_enemy_spawns_on_first_waypoint() -> void:
+	route.waypoints = PackedVector2Array([Vector2(120, 80), Vector2(50, 0)])
+	var enemy := EnemyFactory.create(goblin, route)
+	assert_not_null(enemy, "entity created")
+	assert_eq(route.first_waypoint(), enemy.position,
+			"spawned on route start, never at container origin")
+	enemy.free()
+
+
+func test_spawn_advances_along_first_segment() -> void:
+	var enemy := EnemyFactory.create(goblin, route)
+	var movement: MovementComponent = enemy.get_component(MovementComponent)
+	movement.advance(0.2)
+	assert_almost_eq(11.0, enemy.position.x, 0.001,
+			"advanced along segment start->waypoint[1] (55 px/s * 0.2 s)")
+	assert_almost_eq(0.0, enemy.position.y, 0.001, "stays on the path line")
+	enemy.free()
+
+
 func test_tower_factory_configures_combat() -> void:
 	var built_events := [0]
 	EventBus.subscribe(GameEvents.TOWER_BUILT, func(_p: Dictionary) -> void:
