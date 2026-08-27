@@ -143,6 +143,32 @@ jobs:
           echo "Wrote: $ES_FILE"
           cat "$ES_FILE"
 
+      - name: Preflight sanity (fail loud, public annotations)
+        run: |
+          set -e
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "::notice::GODOT=$(~/godot-bin/godot --version)"
+          echo "::notice::JAVA_HOME=${JAVA_HOME:-UNSET} ($("$JAVA_HOME/bin/java" -version 2>&1 | head -1))"
+          echo "::notice::ANDROID_HOME=${ANDROID_HOME:-UNSET} ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-UNSET}"
+          echo "::notice::BUILD_TOOLS=$(ls "$SDK/build-tools" 2>/dev/null | tr '\n' ',')"
+          echo "::notice::APKSIGNER_34=$([ -f "$SDK/build-tools/34.0.0/apksigner" ] && echo present || echo MISSING)"
+          echo "::notice::PLATFORMS=$(ls "$SDK/platforms" 2>/dev/null | tr '\n' ',')"
+          echo "::notice::TPL_DIRS=$(ls ~/.local/share/godot/export_templates 2>/dev/null | tr '\n' ',')"
+          ES_FILE="$(ls -t ~/.config/godot/editor_settings-*.tres 2>/dev/null | head -1)"
+          if [ ! -f "$ES_FILE" ]; then echo '::error::No editor_settings tres found'; exit 1; fi
+          echo "::notice::ES_FILE=$ES_FILE"
+          JAVA_P="$(sed -n 's|^export/android/java_sdk_path="\(.*\)"$|\1|p' "$ES_FILE")"
+          ANDR_P="$(sed -n 's|^export/android/android_sdk_path="\(.*\)"$|\1|p' "$ES_FILE")"
+          echo "::notice::ES_java_sdk_path=${JAVA_P:-EMPTY}"
+          echo "::notice::ES_android_sdk_path=${ANDR_P:-EMPTY}"
+          [ -n "$JAVA_P" ] && [ -x "$JAVA_P/bin/java" ] || { echo '::error::ES java_sdk_path empty or lacks bin/java'; exit 1; }
+          [ -n "$ANDR_P" ] && [ -d "$ANDR_P/build-tools/34.0.0" ] || { echo '::error::ES android_sdk_path empty or lacks build-tools/34.0.0'; exit 1; }
+          TPL="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
+          echo "::notice::TPL_DIR_EXPECTED=$TPL"
+          [ -s "$TPL/android_debug.apk" ] || { echo "::error::Missing assembled debug template at $TPL"; exit 1; }
+          [ -s "$HOME/.android/debug.keystore" ] || { echo '::error::debug keystore missing'; exit 1; }
+          echo 'PREFLIGHT_OK'
+
       - name: Export debug APK
         run: |
           ~/godot-bin/godot --headless --path . --import
@@ -161,6 +187,15 @@ jobs:
           # instead of silently letting a missing APK break the upload step.
           if [ "$EXIT_CODE" -ne 0 ] || [ ! -s exports/godottd-debug.apk ]; then
             echo "::error::Godot export failed (exit=$EXIT_CODE). Full log: artifact 'android-export-diagnostics'."
+            # Surface the engine log itself as PUBLIC annotations (logs/artifacts
+            # are auth-gated, annotations are not) so failures are diagnosable
+            # without repo-access tokens.
+            n=0
+            while IFS= read -r line; do
+              n=$((n+1))
+              clean="$(printf '%s' "$line" | tr '\r' ' ' | cut -c1-400)"
+              printf '::error::EXP[%02d]|%s\n' "$n" "$clean"
+            done < <(tail -25 export_log.txt)
             exit 1
           fi
 
@@ -178,6 +213,7 @@ jobs:
           {
             echo "== godot version =="; ~/godot-bin/godot --version
             echo "== which java =="; which java || true
+            echo "== android/java env =="; printenv | grep -E '^(ANDROID_|JAVA_HOME)' || true
             echo "== ANDROID_HOME =="; echo "$ANDROID_HOME"; ls "$ANDROID_HOME" 2>/dev/null
             echo "== build-tools =="; ls "$ANDROID_HOME/build-tools" 2>/dev/null
             echo "== editor settings =="; ls -la ~/.config/godot/ 2>/dev/null; cat ~/.config/godot/editor_settings-*.tres 2>/dev/null
