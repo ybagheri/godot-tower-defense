@@ -4,6 +4,27 @@ All notable changes to the **godot-tower-defense** project are documented here.
 
 ## [Unreleased]
 
+### Added — stage path catalog externalization (2026-08-28)
+
+- SPEC-0016: route data leaves the stage `.tres` files — every shipped
+  `PathDefinition` now lives as an external `resources/paths/<route_id>.tres`
+  referenced via `ExtResource`, and every map `Line2D` is bound to its
+  catalog route by a `route_id` metadata stamp.
+- Regression coverage in `content_validation_test` (5 -> 7 tests): route
+  catalogs must resolve external path resources whose id equals the catalog
+  key, and map `Line2D` metas must cover every catalog key exactly once with
+  `points` equal to that route's waypoints - drift now fails CI.
+
+### Changed — stage path catalog externalization (2026-08-28)
+
+- One-shot migration `tools/migrate_stage_paths_to_files.gd` executed over
+  all five shipped stages (`MIGRATION DONE failures=0`), rewriting
+  `resources/stages/*.tres` and stamping `scenes/maps/*.tscn`; pairing was
+  proven by exact waypoint equality before stamping.
+- Assumption A7 (manual Line2D/waypoint sync) CLOSED: the validation suite,
+  not an editor tool, now guards route/map drift. SPEC implementation
+  matrix and PROJECT_STATUS updated accordingly (25 suites / 161 tests).
+
 ### Added — VS scope ratification & design-decision sweep (2026-08-27)
 
 - DESIGN_GAPS P0/P1 rows RESOLVED with recorded decisions: heroes deferred

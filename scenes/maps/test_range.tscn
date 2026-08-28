@@ -1,27 +1,32 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/shared/castle.tscn" id="1_castle"]
+[ext_resource type="Script" path="res://scripts/core/game_entity.gd" id="2_8jgnb"]
 
-[node name="TestRange" type="Node2D"]
+[node name="TestRange" type="Node2D" unique_id=763996753]
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=892055766]
 z_index = -10
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.117, 0.129, 0.105, 1)
 
-[node name="PathLine" type="Line2D" parent="."]
+[node name="PathLine" type="Line2D" parent="." unique_id=1590645614]
 z_index = -5
 points = PackedVector2Array(90, 120, 420, 120, 420, 470, 830, 470, 830, 260, 1190, 260)
 width = 52.0
 default_color = Color(0.353, 0.29, 0.196, 1)
 begin_cap_mode = 2
 end_cap_mode = 2
+metadata/route_id = "stage001.main"
 
-[node name="SpawnMarker" type="Polygon2D" parent="."]
+[node name="SpawnMarker" type="Polygon2D" parent="." unique_id=1135877250]
 position = Vector2(90, 120)
 color = Color(0.556, 0.137, 0.11, 1)
 polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
 
-[node name="Castle" parent="." instance=ExtResource("1_castle")]
+[node name="Castle" type="Node2D" parent="." unique_id=1265778798 instance=ExtResource("1_castle")]
 position = Vector2(1190, 260)
+script = ExtResource("2_8jgnb")
+entity_id = "castle.main"
+tags = PackedStringArray("castle")

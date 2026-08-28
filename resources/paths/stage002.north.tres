@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PathDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="1_bmbay"]
+
+[resource]
+script = ExtResource("1_bmbay")
+waypoints = PackedVector2Array(90, 90, 640, 70, 640, 240, 1105, 330)
+path_type = 1
+id = "stage002.north"
+display_name = "North Pass"

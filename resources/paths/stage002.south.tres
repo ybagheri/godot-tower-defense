@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PathDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="1_t00j0"]
+
+[resource]
+script = ExtResource("1_t00j0")
+waypoints = PackedVector2Array(80, 640, 450, 640, 450, 420, 830, 420, 830, 560, 1105, 480)
+id = "stage002.south"
+display_name = "South Road"

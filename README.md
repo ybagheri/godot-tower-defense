@@ -82,7 +82,7 @@ godot-tower-defense/
 │   ├── INDEX.md
 │   ├── 00_Project/          # manifest, roadmap, status report, spec matrix
 │   ├── 01_Architecture/     # ARCH-0001 layering & boundaries
-│   ├── 04_Specifications/   # SPEC-0001..0015 implementation contracts
+│   ├── 04_Specifications/   # SPEC-0001..0016 implementation contracts
 │   ├── 05_ADR/              # architecture decision records
 │   ├── 12_Game_Design/      # assumptions log + design gap register
 │   ├── 10_Testing/          # performance records

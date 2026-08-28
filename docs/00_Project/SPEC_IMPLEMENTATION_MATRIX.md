@@ -5,10 +5,10 @@ Version: 1.0.0
 Status: Approved
 Owner: Engineering
 Created: 2026-08-27
-Last Updated: 2026-08-27
+Last Updated: 2026-08-28
 Dependencies:
   - PROJ-0005 Project Status Report
-  - SPEC-0001..0015 Specifications
+  - SPEC-0001..0016 Specifications
 ---
 
 # Specification Implementation Matrix
@@ -16,7 +16,7 @@ Dependencies:
 Status values: IMPLEMENTED · PARTIAL · NOT IMPLEMENTED · UNKNOWN.
 "Evidence" cites repository artifacts verified by inspection, not file
 existence alone. Behavior claims are backed by named tests executed in the
-headless runner (24 suites / 157 tests ALL PASSING, 2026-08-27).
+headless runner (25 suites / 161 tests ALL PASSING, 2026-08-28).
 
 | Specification | Status | Evidence | Tests | Notes |
 |---|---|---|---|---|
@@ -28,7 +28,7 @@ headless runner (24 suites / 157 tests ALL PASSING, 2026-08-27).
 | SPEC-0006 Combat System | IMPLEMENTED | CombatSystem + pooled Projectile; DamageTypes physical-flat-armor(min chip)/elemental-percent-resist/TRUE; crit post-mitigation (assumption A1 formula) | combat_system_test (8) | Formula values await Combat GDD ratification (DESIGN_GAPS G-02) |
 | SPEC-0007 Tower System | IMPLEMENTED | TowerFactory assembly; BuildingSystem check_placement reasons gold/path-clearance/spacing; upgrades + sell refunds | building_system_test (7), factory_test | can_target_flying default true until roster counter-play decided (A3) |
 | SPEC-0008 Enemy System | IMPLEMENTED | EnemyFactory tag/component assembly incl. flying/boss flags; visual_scene cosmetic root (A2) | factory_test (5) | Spawn-on-first-waypoint fix regression-tested 2026-08-27 |
-| SPEC-0009 Path System | IMPLEMENTED | PathDefinition validate/first_waypoint/destination/total_length; MovementComponent waypoint advance + arrival event | movement_component_test (6), factory regressions | Map Line2D visuals synced manually (A7 debt) |
+| SPEC-0009 Path System | IMPLEMENTED | PathDefinition validate/first_waypoint/destination/total_length; MovementComponent waypoint advance + arrival event; routes externalized to resources/paths/*.tres with route_id metas binding map Line2Ds (SPEC-0016) | movement_component_test (6), factory regressions, content_validation_test (7) | Manual Line2D sync debt (A7) closed by validated route_id contract |
 | SPEC-0010 Economy System | IMPLEMENTED | EconomySystem can_afford/spend; RewardSystem gold on death; purchase failure surfaces as notification toast | economy_test (6), building_system_test | Balance numbers exclusively in balance_default.tres (A4) |
 | SPEC-0011 Progression System | IMPLEMENTED (v1) | ProgressionTracker stars=max(stars, f(castle_ratio)) persisted via SaveManager; CampaignDefinition stage unlocking | campaign_system_test (7), lifecycle_progression_test (5) | Unlock curve/star thresholds need design pass (G-06) |
 | SPEC-0012 Save System | IMPLEMENTED | Versioned JSON with migration hook, corrupt-file quarantine, future-version rejection | save_manager_test (5) | No rewrite needed; defect-free as directed |

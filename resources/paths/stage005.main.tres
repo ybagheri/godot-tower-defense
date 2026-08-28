@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PathDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="1_jhsk5"]
+
+[resource]
+script = ExtResource("1_jhsk5")
+waypoints = PackedVector2Array(80, 360, 400, 360, 400, 560, 760, 560, 760, 220, 1120, 220)
+id = "stage005.main"
+display_name = "Warlords Road"

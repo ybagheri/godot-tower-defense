@@ -46,7 +46,7 @@ docs/
 ├── 00_Project/              # project-level documents
 ├── 01_Architecture/         # high-level architecture
 ├── 02_GDD/                  # VS scope ratifications (towers/enemies/stages)
-├── 04_Specifications/       # SPEC-0001..0015 contracts
+├── 04_Specifications/       # SPEC-0001..0016 contracts
 ├── 05_ADR/                  # architecture decision records
 ├── 06_Art/                  # art bible                   [EMPTY — PLANNED]
 ├── 07_Lore/                 # world lore                  [EMPTY — PLANNED]
@@ -132,6 +132,7 @@ SPEC-0002 ENTITY      SPEC-0007 TOWER       SPEC-0012 SAVE
 SPEC-0003 COMPONENT   SPEC-0008 ENEMY       SPEC-0013 UI
 SPEC-0004 EVENT       SPEC-0009 PATH        SPEC-0014 AUDIO
 SPEC-0005 WAVE        SPEC-0010 ECONOMY     SPEC-0015 ABILITY
+SPEC-0016 PATH-CATALOG
 ```
 
 All Approved. Implementation state per contract: see

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PathDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="1_asjh7"]
+
+[resource]
+script = ExtResource("1_asjh7")
+waypoints = PackedVector2Array(90, 120, 420, 120, 420, 470, 830, 470, 830, 260, 1190, 260)
+id = "stage001.main"
+display_name = "Main Route"

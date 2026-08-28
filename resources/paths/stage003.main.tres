@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PathDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/path_definition.gd" id="1_cug7n"]
+
+[resource]
+script = ExtResource("1_cug7n")
+waypoints = PackedVector2Array(80, 140, 1140, 140, 1140, 340, 140, 340, 140, 560, 1160, 560)
+id = "stage003.main"
+display_name = "Ironwood Switchback"

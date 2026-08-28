@@ -1,40 +1,46 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/shared/castle.tscn" id="1_castle"]
+[ext_resource type="Script" path="res://scripts/core/game_entity.gd" id="2_kshpt"]
 
-[node name="BrokenCrossroads" type="Node2D"]
+[node name="BrokenCrossroads" type="Node2D" unique_id=1278663751]
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=795112612]
 z_index = -10
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.125, 0.106, 0.086, 1)
 
-[node name="PathNorthwest" type="Line2D" parent="."]
+[node name="PathNorthwest" type="Line2D" parent="." unique_id=2105359452]
 z_index = -5
 points = PackedVector2Array(90, 160, 620, 160, 620, 330, 1130, 330)
 width = 52.0
 default_color = Color(0.353, 0.29, 0.196, 1)
 begin_cap_mode = 2
 end_cap_mode = 2
+metadata/route_id = "stage004.northwest"
 
-[node name="PathSoutheast" type="Line2D" parent="."]
+[node name="PathSoutheast" type="Line2D" parent="." unique_id=1024218033]
 z_index = -5
 points = PackedVector2Array(1190, 640, 700, 640, 700, 430, 1130, 430, 1130, 340)
 width = 52.0
 default_color = Color(0.31, 0.26, 0.18, 1)
 begin_cap_mode = 2
 end_cap_mode = 2
+metadata/route_id = "stage004.southeast"
 
-[node name="SpawnMarkerNW" type="Polygon2D" parent="."]
+[node name="SpawnMarkerNW" type="Polygon2D" parent="." unique_id=546438096]
 position = Vector2(90, 160)
 color = Color(0.556, 0.137, 0.11, 1)
 polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
 
-[node name="SpawnMarkerSE" type="Polygon2D" parent="."]
+[node name="SpawnMarkerSE" type="Polygon2D" parent="." unique_id=2086773519]
 position = Vector2(1190, 640)
 color = Color(0.556, 0.137, 0.11, 1)
 polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
 
-[node name="Castle" parent="." instance=ExtResource("1_castle")]
+[node name="Castle" type="Node2D" parent="." unique_id=769735197 instance=ExtResource("1_castle")]
 position = Vector2(1155, 360)
+script = ExtResource("2_kshpt")
+entity_id = "castle.main"
+tags = PackedStringArray("castle")

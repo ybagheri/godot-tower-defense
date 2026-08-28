@@ -5,7 +5,7 @@ Version: 1.1.0
 Status: Approved
 Owner: Project Architecture
 Created: 2026-08-27
-Last Updated: 2026-08-27
+Last Updated: 2026-08-28
 Dependencies:
   - PROJ-0001 Project Manifest
   - PROJ-0002 Project Roadmap
@@ -46,7 +46,7 @@ final human gate per REL-0001. M9 groundwork shipped in 0.8.0.
 | Combat | CombatSystem, pooled Projectile, DamageTypes | combat_system_test (8), attack_component_test (4) |
 | Towers | TowerFactory, BuildingSystem, UpgradeComponent | building_system_test (7), factory_test (5), targeting_component_test (6) |
 | Enemies | EnemyFactory, EnemyRegistry, EnemyLifecycleSystem | factory_test, lifecycle_progression_test (5) |
-| Paths/movement | PathDefinition, MovementComponent | movement_component_test (6) |
+| Paths/movement | PathDefinition, external route catalog `resources/paths/`, MovementComponent | movement_component_test (6), content_validation_test route-catalog invariants (SPEC-0016) |
 | Economy | EconomySystem wallet, RewardSystem | economy_test (6) |
 | Waves | WaveSystem over stage-embedded wave data | battle_integration_test (6) |
 | Progression | ProgressionTracker stars, campaign unlock gating | campaign_system_test (7) |
